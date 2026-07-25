@@ -8,18 +8,38 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Déployer via SSH
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installer les dépendances et générer Prisma
+        working-directory: server
+        run: |
+          npm ci --omit=dev --no-audit --no-fund
+          npx prisma generate
+
+      - name: Envoyer les fichiers vers AlwaysData
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete --exclude=".env" --exclude="tmp"
+          path: server/
+          remote_path: ${{ secrets.REMOTE_PATH }}/server
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Migrer la BDD et redémarrer
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ${{ secrets.REMOTE_PATH }}
-            git pull origin main
-            cd server
-            npm ci --omit=dev --no-audit --no-fund
-            npx prisma generate
+            cd ${{ secrets.REMOTE_PATH }}/server
             npx prisma migrate deploy
             mkdir -p tmp
             touch tmp/restart.txt
