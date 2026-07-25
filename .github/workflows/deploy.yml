@@ -30,7 +30,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ${{ secrets.REMOTE_PATH }}
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
 
       - name: Envoyer les fichiers vers AlwaysData
         uses: burnett01/rsync-deployments@7.0.1
