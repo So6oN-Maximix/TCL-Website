@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const prisma = require("../lib/prisma");
+const { sendResetMail } = require("../lib/mailer");
 const requireAuth = require("./require-auth");
 
 const router = express.Router();
@@ -112,7 +113,12 @@ router.post('/forgot-password', async (req, res) => {
 				data: { resetToken: token, resetTokenExpiry: expiry },
 			});
 
-			console.log(`Lien de réinitialisation pour ${email} : http://localhost:3000/reset-password?token=${token}`);
+			try {
+				await sendResetMail(user.email, token);
+				console.log(`E-mail de réinitialisation envoyé à ${email}`);
+			} catch (mailError) {
+				console.error("Erreur d'envoi d'e-mail :", mailError);
+			}
 		}
 
 		res.json({ message: 'Si un compte existe avec cet e-mail, un lien de réinitialisation a été envoyé.' });

@@ -370,7 +370,7 @@ section { padding: 80px 0; }
 .admin-stats { margin-top: 20px; margin-bottom: 32px; }
 .admin-table-wrap { border: 1px solid #DAD2B8; background: var(--chalk); }
 .admin-table-head, .admin-table-row {
-	display: grid; grid-template-columns: 2fr 1.2fr 0.8fr 1.4fr; gap: 16px; align-items: center;
+	display: grid; grid-template-columns: 2fr 1.2fr 0.8fr 1.4fr 1fr; gap: 16px; align-items: center;
 	padding: 14px 18px; font-size: 14px;
 }
 .admin-table-head {

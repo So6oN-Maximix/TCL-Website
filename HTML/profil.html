@@ -183,32 +183,6 @@
 	</div>
 </section>
 
-<section class="section-tinted">
-	<div class="wrap">
-		<div class="block-head">
-			<h3>Sécurité</h3>
-		</div>
-		<form class="security-form" id="password-form">
-			<div class="form-group">
-				<label for="current-password">Mot de passe actuel</label>
-				<input type="password" id="current-password" placeholder="••••••••">
-			</div>
-			<div class="security-form-cols">
-				<div class="form-group">
-					<label for="new-password">Nouveau mot de passe</label>
-					<input type="password" id="new-password" placeholder="••••••••">
-				</div>
-				<div class="form-group">
-					<label for="confirm-new-password">Confirmer</label>
-					<input type="password" id="confirm-new-password" placeholder="••••••••">
-				</div>
-			</div>
-			<p class="auth-error" id="password-error" style="display: none;"></p>
-			<button type="submit" class="btn-primary">Mettre à jour le mot de passe</button>
-		</form>
-	</div>
-</section>
-
 <section class="section-tinted" data-role-visible="ADMIN" hidden id="administration">
 	<div class="wrap">
 		<div class="block-head">
@@ -240,12 +214,14 @@
 				<span>Membre</span>
 				<span>Statut</span>
 				<span>Rôle</span>
+				<span>Poste</span>
 				<span>Actions</span>
 			</div>
 			<div class="admin-table-row">
 				<span>Camille Rivière — camille.riviere@email.fr</span>
 				<span class="badge-pending">Visiteur — en attente</span>
-				<span>VISITER</span>
+				<span>VISITEUR</span>
+				<span>VISITEUR</span>
 				<span class="admin-actions">
 					<button type="button" class="btn-outline btn-small">Valider la licence</button>
 				</span>
@@ -254,6 +230,7 @@
 				<span>Léa Morvan — lea.morvan@email.fr</span>
 				<span class="badge-ok">Licenciée</span>
 				<span>MEMBER</span>
+				<span>JOUEUR</span>
 				<span class="admin-actions">
 					<button type="button" class="btn-outline btn-small">Passer admin</button>
 				</span>
@@ -262,11 +239,38 @@
 				<span>Max Leost — max.leost@email.fr</span>
 				<span class="badge-ok">Licencié</span>
 				<span>ADMIN</span>
+				<span>Developpeur</span>
 				<span class="admin-actions">
 					<button type="button" class="btn-outline btn-small">Retirer les droits admin</button>
 				</span>
 			</div>
 		</div>
+	</div>
+</section>
+
+<section>
+	<div class="wrap">
+		<div class="block-head">
+			<h3>Sécurité</h3>
+		</div>
+		<form class="security-form" id="password-form">
+			<div class="form-group">
+				<label for="current-password">Mot de passe actuel</label>
+				<input type="password" id="current-password" placeholder="••••••••">
+			</div>
+			<div class="security-form-cols">
+				<div class="form-group">
+					<label for="new-password">Nouveau mot de passe</label>
+					<input type="password" id="new-password" placeholder="••••••••">
+				</div>
+				<div class="form-group">
+					<label for="confirm-new-password">Confirmer</label>
+					<input type="password" id="confirm-new-password" placeholder="••••••••">
+				</div>
+			</div>
+			<p class="auth-error" id="password-error" style="display: none;"></p>
+			<button type="submit" class="btn-primary">Mettre à jour le mot de passe</button>
+		</form>
 	</div>
 </section>
 
