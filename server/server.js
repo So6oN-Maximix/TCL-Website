@@ -15,6 +15,7 @@ process.env.JWT_SECRET = crypto.randomBytes(64).toString("hex");
 
 app.use("/styles.css", express.static(path.join(root, "styles.css")));
 app.use("/JS", express.static(path.join(root, "JS")));
+app.use("/images", express.static(path.join(root, "images")));
 
 app.get("/", (req, res) => res.sendFile(path.join(root, "index.html")));
 

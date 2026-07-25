@@ -21,11 +21,32 @@ function requireAuth(req, res, next) {
 	}
 }
 
+function normalizeFrenchPhone(raw) {
+	if (!raw) return null;
+	const digits = raw.replace(/[\s.\-()]/g, "");
+ 
+	if (/^0[1-9]\d{8}$/.test(digits)) {
+		return `+33${digits.slice(1)}`;
+	}
+	if (/^\+33[1-9]\d{8}$/.test(digits)) {
+		return digits;
+	}
+	return undefined;
+}
+
 router.post("/signup", async (req, res) => {
 	try {
-		const { email, password, prenom, nom, licence } = req.body;
+		const { email, password, prenom, nom, licence, phone } = req.body;
 
 		if (!email || !password || !prenom || !nom) return res.status(400).json({ error: "Champs manquants" });
+
+		let normalizedPhone = null;
+		if (phone) {
+			normalizedPhone = normalizeFrenchPhone(phone);
+			if (normalizedPhone === undefined) {
+				return res.status(400).json({ error: "Numéro de téléphone invalide" });
+			}
+		}
 
 		const existing = await prisma.user.findUnique({ where: { email } });
 		if (existing) return res.status(409).json({ error: "Un compte existe déjà avec cet e-mail" });
@@ -33,7 +54,7 @@ router.post("/signup", async (req, res) => {
 		const hashedPassword = await bcrypt.hash(password, 10);
 
 		const user = await prisma.user.create({
-			data: { email, password: hashedPassword, prenom, nom, licence },
+			data: { email, password: hashedPassword, prenom, nom, licence, phone: normalizedPhone },
 		});
 
 		res.status(201).json({ id: user.id, email: user.email, prenom: user.prenom, nom: user.nom });
@@ -81,6 +102,7 @@ router.get('/me', requireAuth, async (req, res) => {
 			prenom: user.prenom,
 			nom: user.nom,
 			licence: user.licence,
+			phone: user.phone,
 			role: user.role,
 		});
 	} catch (err) {
