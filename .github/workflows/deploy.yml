@@ -21,6 +21,16 @@ jobs:
         run: |
           npm ci --omit=dev --no-audit --no-fund
           npx prisma generate
+      
+      - name: Mettre à jour le front-end et le code source via git
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}
+            git pull origin main
 
       - name: Envoyer les fichiers vers AlwaysData
         uses: burnett01/rsync-deployments@7.0.1
