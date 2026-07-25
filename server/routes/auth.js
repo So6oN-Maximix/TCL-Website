@@ -2,24 +2,9 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const prisma = require("../lib/prisma");
+const requireAuth = require("./require-auth");
 
 const router = express.Router();
-
-function requireAuth(req, res, next) {
-	const header = req.headers.authorization;
-	if (!header || !header.startsWith('Bearer ')) return res.status(401).json({ error: 'Non authentifié' });
-
-	const token = header.slice(7);
-
-	try {
-		const payload = jwt.verify(token, process.env.JWT_SECRET);
-		req.userId = payload.userId;
-		req.userRole = payload.role;
-		next();
-	} catch (err) {
-		return res.status(401).json({ error: 'Session expirée, merci de vous reconnecter' });
-	}
-}
 
 function normalizeFrenchPhone(raw) {
 	if (!raw) return null;

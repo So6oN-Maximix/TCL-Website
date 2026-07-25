@@ -18,6 +18,7 @@ model User {
 	phone			 String?
 	role      		 Role      @default(VISITER)
 	bookings  		 Booking[]
+	poste			 Poste	   @default(VISITEUR)
 	resetToken 		 String?
 	resetTokenExpiry DateTime?
 	createdAt 		 DateTime  @default(now())
@@ -28,6 +29,20 @@ enum Role {
 	VISITER
 	MEMBER
 	ADMIN
+}
+
+enum Poste {
+	DEVELOPPEUR
+	PRESIDENT
+	PRESIDENTE
+	VICE_PRESIDENT
+	VICE_PRESIDENTE
+	TRESORIER
+	TRESORIERE
+	SECRETAIRE
+	COACH
+	JOUEUR
+	VISITEUR
 }
 
 model Court {
