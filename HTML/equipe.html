@@ -4,13 +4,12 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" type="image/svg+xml" href="/images/TCL_logo.svg">
-	<title>Réinitialiser le mot de passe — Tennis Club de Lanrivoaré</title>
+	<title>Le bureau — Tennis Club de Lanrivoaré</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="/styles.css">
-	<script src="/JS/reset-password.js" defer></script>
-	<script src="/JS/nav.js" defer></script>
 	<script src="/JS/session.js" defer></script>
+	<script src="/JS/nav.js" defer></script>
 </head>
 <body>
 
@@ -29,7 +28,7 @@
 				<a href="#">École de tennis</a>
 				<a href="/actualites">Actualités</a>
 				<a href="#">Tournois</a>
-				<a href="/equipe">Equipe</a>
+				<a href="/equipe" class="active">Equipe</a>
 				<a href="/contact">Contact</a>
 			</div>
 			<div class="nav-actions">
@@ -46,31 +45,59 @@
 		<line x1="750" y1="130" x2="1070" y2="130" stroke="#F6F4EC" stroke-width="2"/>
 	</svg>
 	<div class="wrap">
-		<span class="eyebrow">Espace membres</span>
-		<h1>Nouveau mot de passe</h1>
-		<p>Choisissez un nouveau mot de passe pour votre compte.</p>
+		<span class="eyebrow">Vie du club</span>
+		<h1>Le bureau</h1>
+		<p>Les bénévoles et coachs qui font vivre le club au quotidien.</p>
 	</div>
 </section>
 
 <section>
-	<div class="wrap auth-wrap">
-		<div class="auth-card">
-			<form id="reset-form">
-				<div class="form-group">
-					<label for="new-password">Nouveau mot de passe</label>
-					<input type="password" id="new-password" placeholder="••••••••">
-				</div>
-				<div class="form-group">
-					<label for="confirm-new-password">Confirmer le mot de passe</label>
-					<input type="password" id="confirm-new-password" placeholder="••••••••">
-				</div>
-				<p class="auth-error" id="reset-error" style="display: none;"></p>
-				<p class="auth-error" id="reset-success" style="display: none; color: var(--ink-soft);"></p>
-				<button type="submit" class="btn-primary btn-block">Réinitialiser le mot de passe</button>
-			</form>
+	<div class="wrap">
+		<div class="section-head">
+			<span class="section-eyebrow">Bureau</span>
+			<h2>L'équipe dirigeante</h2>
+		</div>
+		<div class="team-grid">
+			<div class="team-card">
+				<div class="avatar">EL</div>
+				<div class="name">Erwan Le Gall</div>
+				<div class="role">Président</div>
+				<div class="email">erwan.legall@tc-lanrivoare.fr</div>
+			</div>
+			<div class="team-card">
+				<div class="avatar">NQ</div>
+				<div class="name">Nolwenn Quéré</div>
+				<div class="role">Trésorière</div>
+				<div class="email">nolwenn.quere@tc-lanrivoare.fr</div>
+			</div>
+			<div class="team-card">
+				<div class="avatar">YC</div>
+				<div class="name">Yann Cabon</div>
+				<div class="role">Secrétaire</div>
+				<div class="email">yann.cabon@tc-lanrivoare.fr</div>
+			</div>
+		</div>
+	</div>
+</section>
 
-			<div class="auth-foot">
-				<a href="/connexion">Retour à la connexion</a>
+<section class="section-tinted">
+	<div class="wrap">
+		<div class="section-head">
+			<span class="section-eyebrow">École de tennis</span>
+			<h2>Les coachs</h2>
+		</div>
+		<div class="team-grid">
+			<div class="team-card">
+				<div class="avatar">CR</div>
+				<div class="name">Camille Rivière</div>
+				<div class="role">Responsable école de tennis</div>
+				<div class="email">camille.riviere@tc-lanrivoare.fr</div>
+			</div>
+			<div class="team-card">
+				<div class="avatar">TB</div>
+				<div class="name">Titouan Béchennec</div>
+				<div class="role">Coach adjoint</div>
+				<div class="email">titouan.bechennec@tc-lanrivoare.fr</div>
 			</div>
 		</div>
 	</div>
@@ -88,7 +115,7 @@
 			<h4>Le club</h4>
 			<ul>
 				<li><a href="#">École de tennis</a></li>
-				<li><a href="#">Nos équipes</a></li>
+				<li><a href="/equipe">Nos équipes</a></li>
 				<li><a href="#">Tournois</a></li>
 			</ul>
 		</div>
@@ -97,11 +124,12 @@
 			<ul>
 				<li><a href="/reservation">Réserver un court</a></li>
 				<li><a href="#">Devenir membre</a></li>
-				<li><a href="#">Nous contacter</a></li>
+				<li><a href="/contact">Nous contacter</a></li>
 			</ul>
 		</div>
 	</div>
 	<div class="foot-bottom">Tennis Club de Lanrivoaré — site réalisé à titre de démonstration</div>
 </footer>
+
 </body>
 </html>

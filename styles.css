@@ -33,6 +33,7 @@ header {
 	background: var(--court-green);
 	border-bottom: 3px solid var(--ball);
 }
+header .wrap { max-width: 1300px; }
 nav.wrap {
 	display: flex; align-items: center; justify-content: space-between;
 	height: 76px;
@@ -72,7 +73,7 @@ nav.wrap {
 .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .nav-toggle.open span:nth-child(2) { opacity: 0; }
 .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-.nav-collapsible { display: flex; align-items: center; justify-content: flex-end; flex: 1; gap: 40px; margin-left: 40px; }
+.nav-collapsible { display: flex; align-items: center; justify-content: space-between; flex: 1; gap: 40px; margin-left: 40px; }
 
 /* HERO (homepage) */
 .hero {
@@ -223,12 +224,20 @@ section { padding: 80px 0; }
 .form-group label {
 	display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--ink-soft);
 }
+.required { color: var(--clay); margin-left: 2px; }
 .form-group input {
 	width: 100%; padding: 12px; border: 1px solid #DAD2B8; background: var(--chalk);
 	font-family: inherit; font-size: 14px; color: var(--ink);
 }
 .form-group input:focus { outline: none; border-color: var(--clay); }
 .btn-block { width: 100%; text-align: center; display: block; border: none; cursor: pointer; }
+.form-group textarea, .form-group select {
+  width: 100%; padding: 12px; border: 1px solid #DAD2B8; background: var(--chalk);
+  font-family: inherit; font-size: 14px; color: var(--ink);
+}
+.form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--clay); }
+.form-group textarea { resize: vertical; min-height: 140px; }
+
 .auth-foot { text-align: center; font-size: 13px; color: var(--ink-soft); margin-top: 22px; }
 .auth-foot a { color: var(--clay); font-weight: 600; }
 
@@ -402,6 +411,33 @@ footer ul { list-style: none; }
 	color: var(--clay); font-size: 13px; margin-bottom: 14px; text-align: center;
 }
 
+/* CONTACT */
+.contact-grid { display: grid; grid-template-columns: 380px 1fr; gap: 48px; align-items: start; }
+.contact-info { background: var(--court-green); color: var(--chalk); padding: 32px; }
+.contact-info h3 { color: var(--chalk); font-size: 18px; margin-bottom: 20px; }
+.contact-row { margin-bottom: 20px; }
+.contact-row .k {
+  font-size: 13px; color: var(--ball); text-transform: uppercase;
+  letter-spacing: 0.05em; font-weight: 600; display: block; margin-bottom: 4px;
+}
+.contact-row .v { font-size: 15px; color: #D9E4DC; }
+.contact-form-card { background: var(--chalk); border: 1px solid #DAD2B8; padding: 32px; }
+
+/* ÉQUIPE / BUREAU */
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.team-card { background: var(--chalk); border: 1px solid #DAD2B8; padding: 28px; text-align: center; }
+.team-card .avatar { margin: 0 auto 16px; }
+.team-card .name { font-size: 17px; font-weight: 600; }
+.team-card .role {
+  font-size: 13px; color: var(--clay); text-transform: uppercase;
+  letter-spacing: 0.05em; margin-top: 4px; font-weight: 600;
+}
+.team-card .email { font-size: 13px; color: var(--ink-soft); margin-top: 12px; }
+
+@media (max-width: 780px) {
+  .team-grid { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 860px) {
   .nav-toggle { display: flex; }
   .nav-collapsible {
@@ -440,6 +476,7 @@ footer ul { list-style: none; }
   .admin-actions { text-align: left; margin-top: 6px; }
   .visitor-banner { flex-direction: column; align-items: flex-start; }
   .auth-card { padding: 24px; }
+  .contact-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {

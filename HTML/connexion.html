@@ -29,7 +29,8 @@
 				<a href="#">École de tennis</a>
 				<a href="/actualites">Actualités</a>
 				<a href="#">Tournois</a>
-				<a href="#">Contact</a>
+				<a href="/equipe">Equipe</a>
+				<a href="/contact">Contact</a>
 			</div>
 			<div class="nav-actions">
 				<a href="/reservation" class="btn-reserve">Réserver un court</a>
@@ -77,15 +78,15 @@
 
 			<form id="signup-panel" style="display: none;">
 				<div class="form-group">
-					<label for="prenom">Prénom</label>
+					<label for="prenom">Prénom <span class="required">*</span></label>
 					<input type="text" id="prenom" placeholder="Max">
 				</div>
 				<div class="form-group">
-					<label for="nom">Nom</label>
+					<label for="nom">Nom <span class="required">*</span></label>
 					<input type="text" id="nom" placeholder="Leost">
 				</div>
 				<div class="form-group">
-					<label for="signup-email">Adresse e-mail</label>
+					<label for="signup-email">Adresse e-mail <span class="required">*</span></label>
 					<input type="email" id="signup-email" placeholder="prenom.nom@email.fr">
 				</div>
 				<div class="form-group">
@@ -97,11 +98,11 @@
 					<input type="text" id="phone" placeholder="06-12-34-56-78">
 				</div>
 				<div class="form-group">
-					<label for="signup-password">Mot de passe</label>
+					<label for="signup-password">Mot de passe <span class="required">*</span></label>
 					<input type="password" id="signup-password" placeholder="••••••••">
 				</div>
 				<div class="form-group">
-					<label for="confirm-password">Confirmer le mot de passe</label>
+					<label for="confirm-password">Confirmer le mot de passe <span class="required">*</span></label>
 					<input type="password" id="confirm-password" placeholder="••••••••">
 				</div>
 				<p class="auth-error" id="signup-error" style="display: none;"></p>
