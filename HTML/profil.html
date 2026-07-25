@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mon profil — Tennis Club de Lanrivoaré</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/styles.css">
+	<script src="/JS/profil.js" defer></script>
+</head>
+<body>
+
+<header>
+	<nav class="wrap">
+		<div class="logo">
+			<div class="logo-mark">TC</div>
+			Lanrivoaré
+		</div>
+		<div class="nav-links">
+			<a href="/">Accueil</a>
+			<a href="#">École de tennis</a>
+			<a href="/actualites">Actualités</a>
+			<a href="#">Tournois</a>
+			<a href="#">Contact</a>
+		</div>
+		<div class="nav-actions">
+			<a href="/reservation" class="btn-reserve">Réserver un court</a>
+			<a href="/profil" class="nav-account active">Mon compte</a>
+		</div>
+	</nav>
+</header>
+
+<section class="page-hero">
+	<svg class="court-lines" viewBox="0 0 1100 260" preserveAspectRatio="xMidYMid slice">
+		<rect x="750" y="10" width="320" height="240" fill="none" stroke="#F6F4EC" stroke-width="2"/>
+		<line x1="750" y1="130" x2="1070" y2="130" stroke="#F6F4EC" stroke-width="2"/>
+	</svg>
+	<div class="wrap profile-hero-content">
+		<div>
+			<span class="eyebrow">Espace membres</span>
+			<h1>Mon profil</h1>
+			<p>Vos informations, votre licence et l'historique de vos réservations.</p>
+		</div>
+		<button type="button" class="btn-logout" id="logout-btn">Se déconnecter</button>
+	</div>
+</section>
+
+<section class="profile-top">
+	<div class="wrap">
+		<div class="profile-header">
+			<div class="avatar" id="profile-avatar">ML</div>
+			<div>
+				<div class="profile-name" id="profile-name">Max LEOST</div>
+				<div class="profile-meta" id="profile-meta">Licencié depuis 2021 · Membre actif</div>
+			</div>
+			<a href="/reservation" class="btn-primary profile-cta">Réserver un créneau</a>
+		</div>
+
+		<div class="profile-stats">
+			<div class="profile-stat">
+				<div class="num">14</div>
+				<div class="label">Réservations cette saison</div>
+			</div>
+			<div class="profile-stat">
+				<div class="num">3</div>
+				<div class="label">Créneaux à venir</div>
+			</div>
+			<div class="profile-stat">
+				<div class="num">5</div>
+				<div class="label">Années de licence</div>
+			</div>
+			<div class="profile-stat profile-stat-status">
+				<div class="num ok">À jour</div>
+				<div class="label">Cotisation 2025–2026</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="informations">
+	<div class="wrap">
+		<div class="profile-grid">
+			<div>
+				<div class="block-head">
+					<h3>Informations</h3>
+					<button type="button" class="btn-outline btn-small">Modifier</button>
+				</div>
+				<div class="info-list">
+					<div class="info-row"><span class="k">Prénom</span><span class="v">Max</span></div>
+					<div class="info-row"><span class="k">Nom</span><span class="v">Leost</span></div>
+					<div class="info-row"><span class="k">E-mail</span><span class="v">max.leost@email.fr</span></div>
+					<div class="info-row"><span class="k">Téléphone</span><span class="v">06 12 34 56 78</span></div>
+					<div class="info-row"><span class="k">N° de licence FFT</span><span class="v">522905154821</span></div>
+					<div class="info-row"><span class="k">Cotisation 2025-2026</span><span class="v badge-ok">À jour</span></div>
+				</div>
+			</div>
+
+			<div>
+				<div class="block-head">
+					<h3>Mes réservations</h3>
+					<span class="block-count">3 à venir</span>
+				</div>
+
+				<div class="reservations-group">
+					<div class="reservations-label">À venir</div>
+					<div class="info-list">
+						<div class="booking-item">
+							<div>
+								<span class="booking-court">Court 1 (extérieur)</span>
+								<span class="booking-when">Lun 21 juillet · 15h – 16h</span>
+							</div>
+							<span class="booking-status confirmed">Confirmée</span>
+						</div>
+						<div class="booking-item">
+							<div>
+								<span class="booking-court">Court 2 (couvert)</span>
+								<span class="booking-when">Jeu 24 juillet · 18h – 19h</span>
+							</div>
+							<span class="booking-status confirmed">Confirmée</span>
+						</div>
+						<div class="booking-item">
+							<div>
+								<span class="booking-court">Court 1 (extérieur)</span>
+								<span class="booking-when">Sam 26 juillet · 10h – 11h</span>
+							</div>
+							<span class="booking-status confirmed">Confirmée</span>
+						</div>
+					</div>
+
+					<div class="reservations-label">Passées</div>
+					<div class="info-list">
+						<div class="booking-item">
+							<div>
+								<span class="booking-court">Court 2 (couvert)</span>
+								<span class="booking-when">Jeu 17 juillet · 18h – 19h</span>
+							</div>
+							<span class="booking-status past">Passée</span>
+						</div>
+						<div class="booking-item">
+							<div>
+								<span class="booking-court">Court 1 (extérieur)</span>
+								<span class="booking-when">Sam 12 juillet · 10h – 11h</span>
+							</div>
+							<span class="booking-status past">Passée</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="section-tinted">
+	<div class="wrap">
+		<div class="block-head">
+			<h3>Sécurité</h3>
+		</div>
+		<form class="security-form" id="password-form">
+			<div class="form-group">
+				<label for="current-password">Mot de passe actuel</label>
+				<input type="password" id="current-password" placeholder="••••••••">
+			</div>
+			<div class="security-form-cols">
+				<div class="form-group">
+					<label for="new-password">Nouveau mot de passe</label>
+					<input type="password" id="new-password" placeholder="••••••••">
+				</div>
+				<div class="form-group">
+					<label for="confirm-new-password">Confirmer</label>
+					<input type="password" id="confirm-new-password" placeholder="••••••••">
+				</div>
+			</div>
+			<p class="auth-error" id="password-error" style="display: none;"></p>
+			<button type="submit" class="btn-primary">Mettre à jour le mot de passe</button>
+		</form>
+	</div>
+</section>
+
+<footer>
+	<div class="wrap">
+		<div>
+			<h4>TC Lanrivoaré</h4>
+			<p>Mairie, 29290 Lanrivoaré</p>
+			<p>02 98 84 36 43</p>
+			<p>Accès PMR · parking adapté</p>
+		</div>
+		<div>
+			<h4>Le club</h4>
+			<ul>
+				<li><a href="#">École de tennis</a></li>
+				<li><a href="#">Nos équipes</a></li>
+				<li><a href="#">Tournois</a></li>
+			</ul>
+		</div>
+		<div>
+			<h4>Réserver</h4>
+			<ul>
+				<li><a href="/reservation">Réserver un court</a></li>
+				<li><a href="#">Devenir membre</a></li>
+				<li><a href="#">Nous contacter</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="foot-bottom">Tennis Club de Lanrivoaré — site réalisé à titre de démonstration</div>
+</footer>
+
+</body>
+</html>

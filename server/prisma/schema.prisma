@@ -1,0 +1,74 @@
+generator client {
+	provider = "prisma-client-js"
+}
+
+datasource db {
+	provider = "postgresql"
+	url      = env("DATABASE_URL")
+}
+
+model User {
+	id        		 Int       @id @default(autoincrement())
+	email     		 String    @unique
+	password  		 String
+	prenom    		 String
+	nom       	 	 String
+	licence   		 String?
+	role      		 Role      @default(VISITER)
+	bookings  		 Booking[]
+	resetToken 		 String?
+	resetTokenExpiry DateTime?
+	createdAt 		 DateTime  @default(now())
+	updatedAt 		 DateTime  @updatedAt
+}
+
+enum Role {
+	VISITER
+	MEMBER
+	ADMIN
+}
+
+model Court {
+	id       Int       @id @default(autoincrement())
+	nom      String
+	type     String
+	bookings Booking[]
+}
+
+model Booking {
+	id         Int      @id @default(autoincrement())
+	courtId    Int
+	court      Court    @relation(fields: [courtId], references: [id])
+	userId     Int
+	user       User     @relation(fields: [userId], references: [id])
+	date       DateTime
+	heureDebut String
+	heureFin   String
+	statut     String   @default("confirmee")
+	bookedAt   DateTime @default(now())
+
+	@@unique([courtId, date, heureDebut])
+}
+
+model News {
+	id              Int      @id @default(autoincrement())
+	titre           String
+	contenu         String
+	categorie       String
+	datePublication DateTime @default(now())
+}
+
+model Team {
+	id        Int     @id @default(autoincrement())
+	nom       String
+	categorie String
+	resultats String?
+}
+
+model Tournament {
+	id                   Int      @id @default(autoincrement())
+	nom                  String
+	date                 DateTime
+	description          String?
+	inscriptionsOuvertes Boolean  @default(true)
+}

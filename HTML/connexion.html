@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Connexion — Tennis Club de Lanrivoaré</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/styles.css">
+	<script src="/JS/connexion.js" defer></script>
+</head>
+<body>
+
+<header>
+	<nav class="wrap">
+		<div class="logo">
+			<div class="logo-mark">TC</div>
+			Lanrivoaré
+		</div>
+		<div class="nav-links">
+			<a href="/">Accueil</a>
+			<a href="#">École de tennis</a>
+			<a href="/actualites">Actualités</a>
+			<a href="#">Tournois</a>
+			<a href="#">Contact</a>
+		</div>
+		<div class="nav-actions">
+			<a href="/reservation" class="btn-reserve">Réserver un court</a>
+			<a href="/connexion" class="nav-account">Connexion</a>
+		</div>
+	</nav>
+</header>
+
+<section class="page-hero">
+	<svg class="court-lines" viewBox="0 0 1100 260" preserveAspectRatio="xMidYMid slice">
+		<rect x="750" y="10" width="320" height="240" fill="none" stroke="#F6F4EC" stroke-width="2"/>
+		<line x1="750" y1="130" x2="1070" y2="130" stroke="#F6F4EC" stroke-width="2"/>
+	</svg>
+	<div class="wrap">
+		<span class="eyebrow">Espace membres</span>
+		<h1>Connexion</h1>
+		<p>Accédez à vos réservations et gérez votre compte licencié.</p>
+	</div>
+</section>
+
+<section>
+	<div class="wrap auth-wrap">
+		<div class="auth-card">
+			<div class="auth-tabs">
+				<div class="auth-tab active" onclick="showAuthPanel('login', this)">Connexion</div>
+				<div class="auth-tab" onclick="showAuthPanel('signup', this)">Créer un compte</div>
+			</div>
+
+			<form id="login-panel">
+				<div class="form-group">
+					<label for="email">Adresse e-mail</label>
+					<input type="email" id="email" placeholder="prenom.nom@email.fr">
+				</div>
+				<div class="form-group">
+					<label for="password">Mot de passe</label>
+					<input type="password" id="password" placeholder="••••••••">
+					<div style="text-align: right; margin-top: 6px;">
+						<a href="#" onclick="showForgotPanel(); return false;" style="font-size: 13px; color: var(--ink-soft);">Mot de passe oublié ?</a>
+					</div>
+				</div>
+				<p class="auth-error" id="login-error" style="display: none;"></p>
+				<button type="submit" class="btn-primary btn-block">Se connecter</button>
+			</form>
+
+			<form id="signup-panel" style="display: none;">
+				<div class="form-group">
+					<label for="prenom">Prénom</label>
+					<input type="text" id="prenom" placeholder="Max">
+				</div>
+				<div class="form-group">
+					<label for="nom">Nom</label>
+					<input type="text" id="nom" placeholder="Leost">
+				</div>
+				<div class="form-group">
+					<label for="signup-email">Adresse e-mail</label>
+					<input type="email" id="signup-email" placeholder="prenom.nom@email.fr">
+				</div>
+				<div class="form-group">
+					<label for="licence">N° de licence FFT</label>
+					<input type="text" id="licence" placeholder="522905154821">
+				</div>
+				<div class="form-group">
+					<label for="signup-password">Mot de passe</label>
+					<input type="password" id="signup-password" placeholder="••••••••">
+				</div>
+				<div class="form-group">
+					<label for="confirm-password">Confirmer le mot de passe</label>
+					<input type="password" id="confirm-password" placeholder="••••••••">
+				</div>
+				<p class="auth-error" id="signup-error" style="display: none;"></p>
+				<button type="submit" class="btn-primary btn-block">Créer mon compte</button>
+			</form>
+
+			<div class="auth-foot" id="login-foot">
+			Pas encore de compte ? <a href="#" onclick="showAuthPanel('signup', document.querySelectorAll('.auth-tab')[1]); return false;">Créer un compte licencié</a>
+			</div>
+			<div class="auth-foot" id="signup-foot" style="display: none;">
+			Déjà licencié ? <a href="#" onclick="showAuthPanel('login', document.querySelectorAll('.auth-tab')[0]); return false;">Se connecter</a>
+			</div>
+			<div id="forgot-panel" class="auth-panel-block" style="display: none;">
+				<div class="form-group">
+					<label for="forgot-email">Adresse e-mail</label>
+					<input type="email" id="forgot-email" placeholder="prenom.nom@email.fr">
+				</div>
+				<p class="auth-error" id="forgot-message" style="display: none; color: var(--ink-soft);"></p>
+				<button type="button" class="btn-primary btn-block" onclick="submitForgotPassword()">Envoyer le lien</button>
+				<div class="auth-foot">
+					<a href="#" onclick="showAuthPanel('login', document.querySelectorAll('.auth-tab')[0]); document.getElementById('forgot-panel').style.display='none'; return false;">Retour à la connexion</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<footer>
+	<div class="wrap">
+		<div>
+			<h4>TC Lanrivoaré</h4>
+			<p>Mairie, 29290 Lanrivoaré</p>
+			<p>02 98 84 36 43</p>
+			<p>Accès PMR · parking adapté</p>
+		</div>
+		<div>
+			<h4>Le club</h4>
+			<ul>
+				<li><a href="#">École de tennis</a></li>
+				<li><a href="#">Nos équipes</a></li>
+				<li><a href="#">Tournois</a></li>
+			</ul>
+		</div>
+		<div>
+			<h4>Réserver</h4>
+			<ul>
+				<li><a href="/reservation">Réserver un court</a></li>
+				<li><a href="#">Devenir membre</a></li>
+				<li><a href="#">Nous contacter</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="foot-bottom">Tennis Club de Lanrivoaré — site réalisé à titre de démonstration</div>
+</footer>
+
+</body>
+</html>
