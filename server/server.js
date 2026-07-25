@@ -6,6 +6,7 @@ const crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.IP || '0.0.0.0';
 
 const root = path.join(__dirname, "..");
 app.use(express.json());

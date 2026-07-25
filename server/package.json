@@ -4,7 +4,7 @@
 	"description": "Serveur Express pour le site du Tennis Club de Lanrivoaré",
 	"main": "server.js",
 	"scripts": {
-		"start": "node server/server.js"
+		"start": "node server.js"
 	},
 	"dependencies": {
 		"@prisma/client": "^6.19.0",
