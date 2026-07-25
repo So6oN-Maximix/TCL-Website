@@ -3,30 +3,37 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/svg+xml" href="/images/TCL_logo.svg">
 	<title>Mon profil — Tennis Club de Lanrivoaré</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="/styles.css">
 	<script src="/JS/profil.js" defer></script>
+	<script src="/JS/nav.js" defer></script>
 </head>
 <body>
 
 <header>
 	<nav class="wrap">
 		<div class="logo">
-			<div class="logo-mark">TC</div>
-			Lanrivoaré
+			<img src="/images/TCL_logo.svg" alt="Logo TC Lanrivoaré" class="logo-mark">
+			TC Lanrivoaré
 		</div>
-		<div class="nav-links">
-			<a href="/">Accueil</a>
-			<a href="#">École de tennis</a>
-			<a href="/actualites">Actualités</a>
-			<a href="#">Tournois</a>
-			<a href="#">Contact</a>
-		</div>
-		<div class="nav-actions">
-			<a href="/reservation" class="btn-reserve">Réserver un court</a>
-			<a href="/profil" class="nav-account active">Mon compte</a>
+		<button type="button" class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false">
+			<span></span><span></span><span></span>
+		</button>
+		<div class="nav-collapsible" id="nav-collapsible">
+			<div class="nav-links">
+				<a href="/">Accueil</a>
+				<a href="#">École de tennis</a>
+				<a href="/actualites">Actualités</a>
+				<a href="#">Tournois</a>
+				<a href="#">Contact</a>
+			</div>
+			<div class="nav-actions">
+				<a href="/reservation" class="btn-reserve">Réserver un court</a>
+				<a href="/connexion" class="nav-account active">Mon Compte</a>
+			</div>
 		</div>
 	</nav>
 </header>
@@ -51,13 +58,17 @@
 		<div class="profile-header">
 			<div class="avatar" id="profile-avatar">ML</div>
 			<div>
-				<div class="profile-name" id="profile-name">Max LEOST</div>
+				<div class="profile-name-row">
+					<span class="profile-name" id="profile-name">Max LEOST</span>
+					<span class="role-badge" id="role-badge">Licencié</span>
+				</div>
 				<div class="profile-meta" id="profile-meta">Licencié depuis 2021 · Membre actif</div>
 			</div>
-			<a href="/reservation" class="btn-primary profile-cta">Réserver un créneau</a>
+			<a href="/reservation" class="btn-primary profile-cta" data-role-visible="MEMBER,ADMIN">Réserver un créneau</a>
 		</div>
 
-		<div class="profile-stats">
+		<!-- Visible pour les licenciés (membres et admins) -->
+		<div class="profile-stats" data-role-visible="MEMBER,ADMIN">
 			<div class="profile-stat">
 				<div class="num">14</div>
 				<div class="label">Réservations cette saison</div>
@@ -75,6 +86,15 @@
 				<div class="label">Cotisation 2025–2026</div>
 			</div>
 		</div>
+
+		<!-- Visible uniquement pour les visiteurs (pas encore licenciés) -->
+		<div class="visitor-banner" data-role-visible="VISITER" hidden>
+			<div>
+				<h3>Vous n'êtes pas encore licencié·e</h3>
+				<p>Créez votre dossier de licence pour accéder aux réservations de courts, aux tarifs adhérents et à la vie du club.</p>
+			</div>
+			<a href="#" class="btn-primary">Devenir membre licencié</a>
+		</div>
 	</div>
 </section>
 
@@ -91,12 +111,13 @@
 					<div class="info-row"><span class="k">Nom</span><span class="v">Leost</span></div>
 					<div class="info-row"><span class="k">E-mail</span><span class="v">max.leost@email.fr</span></div>
 					<div class="info-row"><span class="k">Téléphone</span><span class="v">06 12 34 56 78</span></div>
-					<div class="info-row"><span class="k">N° de licence FFT</span><span class="v">522905154821</span></div>
-					<div class="info-row"><span class="k">Cotisation 2025-2026</span><span class="v badge-ok">À jour</span></div>
+					<div class="info-row" data-role-visible="MEMBER,ADMIN"><span class="k">N° de licence FFT</span><span class="v">522905154821</span></div>
+					<div class="info-row" data-role-visible="MEMBER,ADMIN"><span class="k">Cotisation 2025-2026</span><span class="v badge-ok">À jour</span></div>
+					<div class="info-row" data-role-visible="VISITER" hidden><span class="k">Statut</span><span class="v badge-pending">Compte visiteur</span></div>
 				</div>
 			</div>
 
-			<div>
+			<div data-role-visible="MEMBER,ADMIN">
 				<div class="block-head">
 					<h3>Mes réservations</h3>
 					<span class="block-count">3 à venir</span>
@@ -147,6 +168,16 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- Visible uniquement pour les visiteurs -->
+			<div data-role-visible="VISITER" hidden>
+				<div class="block-head">
+					<h3>Réservations</h3>
+				</div>
+				<div class="visitor-note">
+					<p>La réservation de courts est réservée aux membres licenciés du club. Une fois votre dossier de licence validé, vous retrouverez ici vos créneaux.</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </section>
@@ -174,6 +205,67 @@
 			<p class="auth-error" id="password-error" style="display: none;"></p>
 			<button type="submit" class="btn-primary">Mettre à jour le mot de passe</button>
 		</form>
+	</div>
+</section>
+
+<section class="section-tinted" data-role-visible="ADMIN" hidden id="administration">
+	<div class="wrap">
+		<div class="block-head">
+			<h3>Administration du club</h3>
+			<span class="role-badge role-badge-admin">Administrateur</span>
+		</div>
+
+		<div class="profile-stats admin-stats">
+			<div class="profile-stat">
+				<div class="num">42</div>
+				<div class="label">Licenciés actifs</div>
+			</div>
+			<div class="profile-stat">
+				<div class="num">5</div>
+				<div class="label">Visiteurs en attente</div>
+			</div>
+			<div class="profile-stat">
+				<div class="num">9</div>
+				<div class="label">Réservations aujourd'hui</div>
+			</div>
+			<div class="profile-stat">
+				<div class="num">2</div>
+				<div class="label">Admins</div>
+			</div>
+		</div>
+
+		<div class="admin-table-wrap">
+			<div class="admin-table-head">
+				<span>Membre</span>
+				<span>Statut</span>
+				<span>Rôle</span>
+				<span>Actions</span>
+			</div>
+			<div class="admin-table-row">
+				<span>Camille Rivière — camille.riviere@email.fr</span>
+				<span class="badge-pending">Visiteur — en attente</span>
+				<span>VISITER</span>
+				<span class="admin-actions">
+					<button type="button" class="btn-outline btn-small">Valider la licence</button>
+				</span>
+			</div>
+			<div class="admin-table-row">
+				<span>Léa Morvan — lea.morvan@email.fr</span>
+				<span class="badge-ok">Licenciée</span>
+				<span>MEMBER</span>
+				<span class="admin-actions">
+					<button type="button" class="btn-outline btn-small">Passer admin</button>
+				</span>
+			</div>
+			<div class="admin-table-row">
+				<span>Max Leost — max.leost@email.fr</span>
+				<span class="badge-ok">Licencié</span>
+				<span>ADMIN</span>
+				<span class="admin-actions">
+					<button type="button" class="btn-outline btn-small">Retirer les droits admin</button>
+				</span>
+			</div>
+		</div>
 	</div>
 </section>
 

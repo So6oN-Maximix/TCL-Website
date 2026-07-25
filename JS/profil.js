@@ -63,6 +63,8 @@ function applyUserToDom(user) {
 		avatarEl.textContent = `${user.prenom[0]}${user.nom[0]}`.toUpperCase();
 	}
 
+	applyRoleVisibility(user.role);
+
 	document.querySelectorAll(".info-row").forEach((row) => {
 		const label = row.querySelector(".k")?.textContent.trim();
 		const value = row.querySelector(".v");
@@ -71,7 +73,40 @@ function applyUserToDom(user) {
 		if (label === "Prénom" && user.prenom) value.textContent = user.prenom;
 		if (label === "Nom" && user.nom) value.textContent = user.nom;
 		if (label === "N° de licence FFT" && user.licence) value.textContent = user.licence;
+		if (label === "Téléphone" && user.phone) value.textContent = formatPhone(user.phone);
 	});
+}
+
+function formatPhone(raw) {
+	const phoneNumber = "0" + raw.split("+33")[1]
+	const printedPhoneNumber =  phoneNumber.match(/.{1,2}/g).join("-");
+	return printedPhoneNumber;
+}
+
+const ROLE_LABELS = {
+	VISITER: "Visiteur",
+	MEMBER: "Licencié",
+	ADMIN: "Administrateur",
+};
+const ROLE_BADGE_CLASSES = {
+	VISITER: "role-badge-visiteur",
+	MEMBER: "role-badge-membre",
+	ADMIN: "role-badge-admin",
+};
+
+function applyRoleVisibility(rawRole) {
+	const role = (rawRole || "VISITER").toUpperCase();
+
+	document.querySelectorAll("[data-role-visible]").forEach((el) => {
+		const allowed = el.dataset.roleVisible.split(",").map((r) => r.trim().toUpperCase());
+		el.hidden = !allowed.includes(role);
+	});
+
+	const badge = document.getElementById("role-badge");
+	if (badge) {
+		badge.textContent = ROLE_LABELS[role] || role;
+		badge.className = `role-badge ${ROLE_BADGE_CLASSES[role] || ""}`;
+	}
 }
 
 function setupLogout() {

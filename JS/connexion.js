@@ -55,6 +55,7 @@ document.getElementById("login-panel").addEventListener("submit", async (e) => {
 		}
 
 		localStorage.setItem("token", data.token);
+		if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
 		window.location.href = "/profil";
 	} catch (err) {
 		errorEl.textContent = "Impossible de contacter le serveur";
@@ -103,6 +104,7 @@ document.getElementById("signup-panel").addEventListener("submit", async (e) => 
 		});
 		const loginData = await loginRes.json();
 		localStorage.setItem('token', loginData.token);
+		if (loginData.user) localStorage.setItem('user', JSON.stringify(loginData.user));
 		window.location.href = '/profil';
 	} catch (err) {
 		errorEl.textContent = "Impossible de contacter le serveur";
