@@ -10,6 +10,7 @@ datasource db {
 
 model User {
 	id        		 Int       @id @default(autoincrement())
+	sexe			 Boolean   @default(true)
 	email     		 String    @unique
 	password  		 String
 	prenom    		 String
@@ -19,6 +20,9 @@ model User {
 	role      		 Role      @default(VISITER)
 	bookings  		 Booking[]
 	poste			 Poste	   @default(VISITEUR)
+	cotisationPayed  Boolean   @default(false)
+	teamId    		 Int?
+	team      		 Team?     @relation(fields: [teamId], references: [id])
 	resetToken 		 String?
 	resetTokenExpiry DateTime?
 	createdAt 		 DateTime  @default(now())
@@ -27,6 +31,7 @@ model User {
 
 enum Role {
 	VISITER
+	ATTENTE_MEMBER
 	MEMBER
 	ADMIN
 }
@@ -80,6 +85,7 @@ model Team {
 	nom       String
 	categorie String
 	resultats String?
+	members   User[]
 }
 
 model Tournament {

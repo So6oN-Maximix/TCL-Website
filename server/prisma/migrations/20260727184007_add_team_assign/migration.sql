@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "cotisationPayed" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "sexe" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "teamId" INTEGER;
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;

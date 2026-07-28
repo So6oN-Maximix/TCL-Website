@@ -1,9 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
+const crypto = require("crypto");
 const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
-const crypto = require("crypto");
+const teamsRoutes = require("./routes/teams");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use("/images", express.static(path.join(root, "images")));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/teams", teamsRoutes);
 
 app.get("/", (req, res) => res.sendFile(path.join(root, "index.html")));
 

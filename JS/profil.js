@@ -63,7 +63,7 @@ function applyUserToDom(user) {
 		avatarEl.textContent = `${user.prenom[0]}${user.nom[0]}`.toUpperCase();
 	}
 
-	applyRoleVisibility(user.role);
+	applyRoleVisibility(user.role, user.email);
 
 	document.querySelectorAll(".info-row").forEach((row) => {
 		const label = row.querySelector(".k")?.textContent.trim();
@@ -85,17 +85,26 @@ function formatPhone(raw) {
 
 const ROLE_LABELS = {
 	VISITER: "Visiteur",
+	ATTENTE_MEMBER: "En Attente",
 	MEMBER: "Licencié",
 	ADMIN: "Administrateur",
 };
+const TABLE_BADGE_CLASSES = {
+	VISITER: "badge-visiteur",
+	ATTENTE_MEMBER: "badge-attente",
+	MEMBER: "badge-member",
+	ADMIN: "badge-admin",
+};
 const ROLE_BADGE_CLASSES = {
 	VISITER: "role-badge-visiteur",
+	ATTENTE_MEMBER: "role-badge-visiteur",
 	MEMBER: "role-badge-membre",
 	ADMIN: "role-badge-admin",
 };
 
-function applyRoleVisibility(rawRole) {
+function applyRoleVisibility(rawRole, rawEmail) {
 	const role = (rawRole || "VISITER").toUpperCase();
+	if (role === "ADMIN") updateAdminTable(rawEmail);
 
 	document.querySelectorAll("[data-role-visible]").forEach((el) => {
 		const allowed = el.dataset.roleVisible.split(",").map((r) => r.trim().toUpperCase());
@@ -107,6 +116,67 @@ function applyRoleVisibility(rawRole) {
 		badge.textContent = ROLE_LABELS[role] || role;
 		badge.className = `role-badge ${ROLE_BADGE_CLASSES[role] || ""}`;
 	}
+}
+
+async function updateAdminTable(email) {
+	try {
+		const res = await fetch("/api/users/all", {
+			method: "GET",
+			headers: { "Content-Type": "application/json" }
+		});
+		const data = await res.json();
+
+		const wrap = document.querySelector(".admin-table-wrap");
+        wrap.querySelectorAll(".admin-table-row").forEach(row => row.remove());
+
+		for (const user of data) addUserToAdminTable(user, email);
+
+		document.querySelectorAll(".admin-actions button").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                console.log(`BTN id : ${e.target.id} / Test : ${e.target.textContent}`);
+            });
+        });
+	} catch(error) {
+		console.error(error);
+	}
+}
+
+function addUserToAdminTable(user, email) {
+	const globalDiv = document.createElement("div");
+	globalDiv.classList.add("admin-table-row");
+
+	const nameSpan = document.createElement("span");
+	nameSpan.textContent = `${user.prenom} ${user.nom.toUpperCase()} - ${user.email}`;
+	const badgeSpan = document.createElement("span");
+	badgeSpan.classList.add(TABLE_BADGE_CLASSES[user.role]);
+	badgeSpan.textContent = ROLE_LABELS[user.role];
+	const roleSpan = document.createElement("span");
+	roleSpan.textContent = user.role;
+	const posteSpan = document.createElement("span");
+	posteSpan.textContent = user.poste;
+
+	const adminActionBadge = document.createElement("div");
+	adminActionBadge.classList.add("admin-actions");
+
+	globalDiv.appendChild(nameSpan);
+	globalDiv.appendChild(badgeSpan);
+	globalDiv.appendChild(roleSpan);
+	globalDiv.appendChild(posteSpan);
+
+	const textBtn = (user.role === "VISITER" || user.role === "ATTENTE_MEMBER") ? "Passer Membre" : (user.role === "MEMBER" ? "Passer Admin" : "Retirer les droits");
+	globalDiv.innerHTML +=
+		user.email !== email
+		? `
+		<span class="admin-actions">
+			<button type="button" class="btn-outline btn-small" id="btn-user-${user.id}">${textBtn}</button>
+		</span>`
+		: `
+		<span class="admin-actions" style="color: var(--ink-soft); font-size: 13px; font-style: italic;">
+			(Vous-même)
+		</span>`
+	;
+
+	document.querySelector(".admin-table-wrap").appendChild(globalDiv);
 }
 
 function setupLogout() {

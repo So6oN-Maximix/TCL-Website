@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/svg+xml" href="/images/TCL_logo.svg">
+	<title>Administration — Tennis Club de Lanrivoaré</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/styles.css">
+	<script src="/JS/session.js" defer></script>
+	<script src="/JS/nav.js" defer></script>
+	<script src="/JS/members.js" defer></script>
+</head>
+<body>
+
+<header>
+	<nav class="wrap">
+		<div class="logo">
+			<img src="/images/TCL_logo.svg" alt="Logo TC Lanrivoaré" class="logo-mark">
+			TC Lanrivoaré
+		</div>
+		<button type="button" class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false">
+			<span></span><span></span><span></span>
+		</button>
+		<div class="nav-collapsible" id="nav-collapsible">
+			<div class="nav-links">
+				<a href="/">Accueil</a>
+				<a href="#">École de tennis</a>
+				<a href="/actualites">Actualités</a>
+				<a href="#">Tournois</a>
+				<a href="/equipe">Equipe</a>
+				<a href="/contact">Contact</a>
+			</div>
+			<div class="nav-actions">
+				<a href="/reservation" class="btn-reserve">Réserver un court</a>
+				<a href="/connexion" class="nav-account active">Mon Compte</a>
+			</div>
+		</div>
+	</nav>
+</header>
+
+<section class="page-hero">
+	<svg class="court-lines" viewBox="0 0 1100 260" preserveAspectRatio="xMidYMid slice">
+		<rect x="750" y="10" width="320" height="240" fill="none" stroke="#F6F4EC" stroke-width="2"/>
+		<line x1="750" y1="130" x2="1070" y2="130" stroke="#F6F4EC" stroke-width="2"/>
+	</svg>
+	<div class="wrap">
+		<span class="eyebrow">Administration</span>
+		<h1>Gestion des membres</h1>
+		<p>Cotisation, licence, équipe et rôle de chaque licencié — modifiable directement ici.</p>
+	</div>
+</section>
+
+<section id="admin-guard-message" hidden>
+	<div class="wrap">
+		<p class="auth-error" style="display:block;">Accès réservé aux administrateurs. Redirection…</p>
+	</div>
+</section>
+
+<section id="admin-content">
+	<div class="wrap">
+		<div class="block-head">
+			<h3>Ajouter un licencié</h3>
+			<button type="button" class="btn-outline btn-small" id="toggle-create-form">+ Ajouter un licencié</button>
+		</div>
+
+		<form class="member-create-form" id="member-create-form" hidden>
+			<div class="form-group">
+				<label for="new-prenom">Prénom</label>
+				<input type="text" id="new-prenom" required>
+			</div>
+			<div class="form-group">
+				<label for="new-nom">Nom</label>
+				<input type="text" id="new-nom" required>
+			</div>
+			<div class="form-group">
+				<label for="new-email">E-mail</label>
+				<input type="email" id="new-email" required>
+			</div>
+			<div class="form-group">
+				<label for="new-password">Mot de passe temporaire</label>
+				<input type="text" id="new-password" required>
+			</div>
+			<div class="form-group">
+				<label for="new-sexe">Sexe</label>
+				<select id="new-sexe">
+					<option value="true">Homme</option>
+					<option value="false">Femme</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="new-role">Rôle</label>
+				<select id="new-role">
+					<option value="VISITER">Visiteur</option>
+					<option value="ATTENTE_MEMBER">En attente</option>
+					<option value="MEMBER" selected>Licencié</option>
+					<option value="ADMIN">Administrateur</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="new-licence">N° de licence FFT</label>
+				<input type="text" id="new-licence" placeholder="Facultatif">
+			</div>
+			<div class="form-group">
+				<label for="new-cotisation">Cotisation</label>
+				<div style="display:flex; align-items:center; gap:6px; height:42px;">
+					<input type="checkbox" id="new-cotisation" style="margin:0; width:auto; flex-shrink:0;">
+					<label for="new-cotisation" style="display:inline; margin:0; padding:0; font-weight:400; text-transform:none; letter-spacing:normal; color:var(--ink); font-size:14px; white-space:nowrap;">À jour</label>
+				</div>
+			</div>
+			<div class="form-group form-group-submit">
+				<button type="submit" class="btn-primary">Créer le compte</button>
+				<button type="button" class="btn-outline" id="cancel-create-form">Annuler</button>
+				<span class="save-status" id="create-status"></span>
+			</div>
+		</form>
+
+		<div class="filters">
+			<input type="text" id="search-input" placeholder="Rechercher un membre (nom, email)…" class="search-input">
+		</div>
+
+		<div class="admin-table-wrap">
+			<div class="admin-table-head admin-table-head-full">
+				<span>Membre</span>
+				<span>Rôle</span>
+				<span>Équipe</span>
+				<span>Cotisation</span>
+				<span>Licence</span>
+				<span>Actions</span>
+			</div>
+			<div id="members-list"></div>
+		</div>
+	</div>
+</section>
+
+<footer>
+	<div class="wrap">
+		<div>
+			<h4>TC Lanrivoaré</h4>
+			<p>Mairie, 29290 Lanrivoaré</p>
+			<p>02 98 84 36 43</p>
+			<p>Accès PMR · parking adapté</p>
+		</div>
+		<div>
+			<h4>Le club</h4>
+			<ul>
+				<li><a href="#">École de tennis</a></li>
+				<li><a href="#">Nos équipes</a></li>
+				<li><a href="#">Tournois</a></li>
+			</ul>
+		</div>
+		<div>
+			<h4>Réserver</h4>
+			<ul>
+				<li><a href="/reservation">Réserver un court</a></li>
+				<li><a href="#">Devenir membre</a></li>
+				<li><a href="#">Nous contacter</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="foot-bottom">Tennis Club de Lanrivoaré — site réalisé à titre de démonstration</div>
+</footer>
+
+</body>
+</html>
