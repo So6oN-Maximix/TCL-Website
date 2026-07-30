@@ -43,7 +43,7 @@ function addUserToTable(user, placement) {
         if (user.sexe === isMaleCategory) {
             const teamOption = document.createElement("option");
             teamOption.selected = user.teamId === team["id"];
-            teamOption.value = team["nom"];
+            teamOption.value = team["id"];
             teamOption.textContent = team["nom"];
             teamSelect.appendChild(teamOption);
         }
@@ -83,14 +83,44 @@ function addUserToTable(user, placement) {
     saveButton.type = "button";
     saveButton.classList.add("btn-outline", "btn-small", "save-btn");
     saveButton.textContent = "Enregistrer";
-    adminActionSpan.appendChild(saveButton);
+    
+    const statusSpan = document.createElement("span");
+    saveButton.onclick = async () => {
+        try {
+            const res = await fetch("/api/users/save", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    id: Number(globalDiv.getAttribute("data-id")),
+                    role: roleSelect.value,
+                    teamId: teamSelect.value,
+                    cotisation: upToDateInput.checked,
+                    licence: licenceInput.value
+                })
+            });
+
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                statusSpan.textContent = data.error || "Erreur";
+                statusSpan.style.color = "var(--clay)";
+                return;
+            }
+
+            statusSpan.textContent = "Enregistré ✓";
+            statusSpan.style.color = "var(--court-green)";
+            setTimeout(() => (statusSpan.textContent = isWaiting ? "En Attente" : ""), 2000);
+        } catch (error) {
+            console.log("Error server : ", error);
+        }
+    };
+    
     if (isWaiting) {
-        const statusSpan = document.createElement("span");
         statusSpan.classList.add("save-status");
         statusSpan.style.color = "var(--clay)";
         statusSpan.textContent = "En Attente";
-        adminActionSpan.appendChild(statusSpan);
     }
+    adminActionSpan.appendChild(saveButton);
+    adminActionSpan.appendChild(statusSpan);
 
     /* GROUPING */
     globalDiv.appendChild(nameSpan);

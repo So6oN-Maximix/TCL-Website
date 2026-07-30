@@ -75,6 +75,20 @@ router.post("/add", async (req, res) => {
 	}
 });
 
+router.post("/save", async (req, res) => {
+	try {
+		const {id, role, teamId, cotisation, licence} = req.body;
+		const updatedUser = await prisma.user.update({
+			where: {id: id},
+			data: {role, teamId: teamId !== "" ? teamId : null, cotisationPayed: cotisation, licence}
+		});
+
+		res.status(200).json({ message: "User successfully saved", updatedUser });
+	} catch (error) {
+		console.log("Error while saving player : ", error);
+	}
+})
+
 const ordrePostes = {
 	"PRESIDENT": 1,
 	"PRESIDENTE": 1,
