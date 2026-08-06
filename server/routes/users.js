@@ -27,7 +27,6 @@ router.get("/role", async (req, res) => {
 
 router.get("/all", async (req, res) => {
 	try {
-		const { role } = req.query;
 		const users = await prisma.user.findMany({
 			select: {
 				id: true,
@@ -80,7 +79,7 @@ router.post("/save", async (req, res) => {
 		const {id, role, teamId, cotisation, licence} = req.body;
 		const updatedUser = await prisma.user.update({
 			where: {id: id},
-			data: {role, teamId: teamId !== "" ? teamId : null, cotisationPayed: cotisation, licence}
+			data: {role, teamId: teamId !== "" ? parseInt(teamId) : null, cotisationPayed: cotisation, licence}
 		});
 
 		res.status(200).json({ message: "User successfully saved", updatedUser });

@@ -1,15 +1,3 @@
-// ============================================================
-// Page profil — TC Lanrivoaré
-// ============================================================
-// Pour l'instant, la page affiche des données de démonstration
-// écrites en dur dans profil.html. Ce script :
-//   1) essaie de remplacer ces données par celles de l'utilisateur
-//      réellement connecté (si connexion.js les a stockées),
-//   2) gère le bouton de déconnexion,
-//   3) valide le formulaire de changement de mot de passe côté
-//      client (l'appel à une vraie route API reste à brancher).
-// ============================================================
-
 document.addEventListener("DOMContentLoaded", () => {
 	hydrateFromStoredUser();
     checkSession();

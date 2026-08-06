@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="/styles.css">
 	<script src="/JS/session.js" defer></script>
 	<script src="/JS/nav.js" defer></script>
+	<script src="/JS/equipes.js" defer></script>
 </head>
 <body>
 
@@ -77,7 +78,7 @@
 				<label for="new-resultats">Résultats</label>
 				<input type="text" id="new-resultats" placeholder="Facultatif">
 			</div>
-			<button type="submit" class="btn-primary">Créer l'équipe</button>
+			<button type="submit" class="btn-primary" id="toggle-create-form-team">Créer l'équipe</button>
 		</form>
 
 		<div class="filters" style="margin-top:48px;">
@@ -93,56 +94,7 @@
 				<span>Actions</span>
 			</div>
 
-			<div id="teams-list">
-
-				<div class="team-table-row" data-id="1">
-					<span><input type="text" class="admin-field" data-field="nom" value="Seniors 1"></span>
-					<span><input type="text" class="admin-field" data-field="categorie" value="Championnat Seniors"></span>
-					<span><input type="text" class="admin-field" data-field="resultats" value="3 victoires, 1 défaite — 1ère division"></span>
-					<span class="team-member-count">8 membres</span>
-					<span class="admin-actions">
-						<button type="button" class="btn-outline btn-small save-btn">Enregistrer</button>
-						<button type="button" class="btn-outline btn-small delete-btn">Supprimer</button>
-						<span class="save-status"></span>
-					</span>
-				</div>
-
-				<div class="team-table-row" data-id="2">
-					<span><input type="text" class="admin-field" data-field="nom" value="Seniors 2"></span>
-					<span><input type="text" class="admin-field" data-field="categorie" value="Championnat Seniors"></span>
-					<span><input type="text" class="admin-field" data-field="resultats" value="Saison en cours"></span>
-					<span class="team-member-count">6 membres</span>
-					<span class="admin-actions">
-						<button type="button" class="btn-outline btn-small save-btn">Enregistrer</button>
-						<button type="button" class="btn-outline btn-small delete-btn">Supprimer</button>
-						<span class="save-status"></span>
-					</span>
-				</div>
-
-				<div class="team-table-row" data-id="3">
-					<span><input type="text" class="admin-field" data-field="nom" value="Féminines"></span>
-					<span><input type="text" class="admin-field" data-field="categorie" value="Championnat Femmes"></span>
-					<span><input type="text" class="admin-field" data-field="resultats" value="Qualifiées pour les demi-finales départementales"></span>
-					<span class="team-member-count">5 membres</span>
-					<span class="admin-actions">
-						<button type="button" class="btn-outline btn-small save-btn">Enregistrer</button>
-						<button type="button" class="btn-outline btn-small delete-btn">Supprimer</button>
-						<span class="save-status"></span>
-					</span>
-				</div>
-
-				<div class="team-table-row" data-id="4">
-					<span><input type="text" class="admin-field" data-field="nom" value="Jeunes 15-18 ans"></span>
-					<span><input type="text" class="admin-field" data-field="categorie" value="Championnat Jeunes"></span>
-					<span><input type="text" class="admin-field" data-field="resultats" value=""></span>
-					<span class="team-member-count">4 membres</span>
-					<span class="admin-actions">
-						<button type="button" class="btn-outline btn-small save-btn">Enregistrer</button>
-						<button type="button" class="btn-outline btn-small delete-btn">Supprimer</button>
-					</span>
-				</div>
-
-			</div>
+			<div id="teams-list"></div>
 		</div>
 	</div>
 </section>
