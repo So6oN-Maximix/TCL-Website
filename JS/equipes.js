@@ -40,10 +40,39 @@ function addTeamToTable(team, membersNum) {
     buttonsSpan.classList.add("admin-actions");
     const statusSpan = document.createElement("span");
     statusSpan.classList.add("save-status");
+
     const saveBtn = document.createElement("button");
     saveBtn.type = "button";
     saveBtn.classList.add("btn-outline", "btn-small", "save-btn");
     saveBtn.textContent = "Enregistrer";
+    saveBtn.onclick = async () => {
+        try {
+            const res = await fetch("/api/teams/save", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    id: Number(globalDiv.getAttribute("data-id")),
+                    nom: nameSpan.querySelector("input").value,
+                    categorie: categorieSpan.querySelector("input").value,
+                    resultats: resultsSpan.querySelector("input").value
+                })
+            });
+
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                statusSpan.textContent = data.error || "Erreur";
+                statusSpan.style.color = "var(--clay)";
+                return;
+            }
+
+            statusSpan.textContent = "Enregistré ✓";
+            statusSpan.style.color = "var(--court-green)";
+            setTimeout(() => (statusSpan.textContent = isWaiting ? "En Attente" : ""), 2000);
+        } catch (error) {
+            console.log("Error server : ", error);
+        }
+    };
+
     const deleteBtn = document.createElement("button");
     deleteBtn.type = "button";
     deleteBtn.classList.add("btn-outline", "btn-small", "delete-btn");
