@@ -29,31 +29,10 @@ model User {
 	updatedAt 		 DateTime  @updatedAt
 }
 
-enum Role {
-	VISITER
-	ATTENTE_MEMBER
-	MEMBER
-	ADMIN
-}
-
-enum Poste {
-	DEVELOPPEUR
-	PRESIDENT
-	PRESIDENTE
-	VICE_PRESIDENT
-	VICE_PRESIDENTE
-	TRESORIER
-	TRESORIERE
-	SECRETAIRE
-	COACH
-	JOUEUR
-	VISITEUR
-}
-
 model Court {
 	id       			Int       @id @default(autoincrement())
 	nom      			String
-	type     			String
+	type     			CourtType @default(INTERIEUR)
 	bookings 			Booking[]
 	indisponibilites	Indisponibilite[]
 }
@@ -78,7 +57,6 @@ model Indisponibilite {
 	court      Court    @relation(fields: [courtId], references: [id])
 	date       DateTime @db.Date
 	heureDebut Int
-	heureFin   Int
 	raison     String?
 }
 
@@ -104,4 +82,31 @@ model Tournament {
 	date                 DateTime
 	description          String?
 	inscriptionsOuvertes Boolean  @default(true)
+}
+
+
+enum Role {
+	VISITER
+	ATTENTE_MEMBER
+	MEMBER
+	ADMIN
+}
+
+enum Poste {
+	DEVELOPPEUR
+	PRESIDENT
+	PRESIDENTE
+	VICE_PRESIDENT
+	VICE_PRESIDENTE
+	TRESORIER
+	TRESORIERE
+	SECRETAIRE
+	COACH
+	JOUEUR
+	VISITEUR
+}
+
+enum CourtType {
+	INTERIEUR
+	EXTERIEUR
 }
