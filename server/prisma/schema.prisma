@@ -51,10 +51,11 @@ enum Poste {
 }
 
 model Court {
-	id       Int       @id @default(autoincrement())
-	nom      String
-	type     String
-	bookings Booking[]
+	id       			Int       @id @default(autoincrement())
+	nom      			String
+	type     			String
+	bookings 			Booking[]
+	indisponibilites	Indisponibilite[]
 }
 
 model Booking {
@@ -63,13 +64,22 @@ model Booking {
 	court      Court    @relation(fields: [courtId], references: [id])
 	userId     Int
 	user       User     @relation(fields: [userId], references: [id])
-	date       DateTime
-	heureDebut String
-	heureFin   String
+	date       DateTime @db.Date
+	heureDebut Int
 	statut     String   @default("confirmee")
 	bookedAt   DateTime @default(now())
 
 	@@unique([courtId, date, heureDebut])
+}
+
+model Indisponibilite {
+	id         Int      @id @default(autoincrement())
+	courtId    Int
+	court      Court    @relation(fields: [courtId], references: [id])
+	date       DateTime @db.Date
+	heureDebut Int
+	heureFin   Int
+	raison     String?
 }
 
 model News {

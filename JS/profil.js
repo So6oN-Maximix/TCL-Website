@@ -59,7 +59,7 @@ function applyUserToDom(user) {
 		if (!value) return;
 		if (label === "E-mail" && user.email) value.textContent = user.email;
 		if (label === "Prénom" && user.prenom) value.textContent = user.prenom;
-		if (label === "Nom" && user.nom) value.textContent = user.nom;
+		if (label === "Nom" && user.nom) value.textContent = user.nom.toUpperCase();
 		if (label === "N° de licence FFT" && user.licence) value.textContent = user.licence;
 		if (label === "Téléphone" && user.phone) value.textContent = formatPhone(user.phone);
 	});

@@ -2,13 +2,14 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const crypto = require("crypto");
+
 const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
 const teamsRoutes = require("./routes/teams");
+const reservationRoutes = require("./routes/reserveCourt");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.IP || '0.0.0.0';
 
 const root = path.join(__dirname, "..");
 app.use(express.json());
@@ -22,6 +23,7 @@ app.use("/images", express.static(path.join(root, "images")));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/teams", teamsRoutes);
+app.use("/api/reserveCourt", reservationRoutes);
 
 app.get("/", (req, res) => res.sendFile(path.join(root, "index.html")));
 

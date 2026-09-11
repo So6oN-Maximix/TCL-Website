@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/svg+xml" href="/images/TCL_logo.svg">
+	<title>Disponibilités — Tennis Club de Lanrivoaré</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/styles.css">
+	<script src="/JS/session.js" defer></script>
+	<script src="/JS/nav.js" defer></script>
+	<script src="/JS/disponibilites.js" defer></script>
+</head>
+<body>
+
+<header>
+	<nav class="wrap">
+		<div class="logo">
+			<img src="/images/TCL_logo.svg" alt="Logo TC Lanrivoaré" class="logo-mark">
+			TC Lanrivoaré
+		</div>
+		<button type="button" class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false">
+			<span></span><span></span><span></span>
+		</button>
+		<div class="nav-collapsible" id="nav-collapsible">
+			<div class="nav-links">
+				<a href="/">Accueil</a>
+				<a href="#">École de tennis</a>
+				<a href="/actualites">Actualités</a>
+				<a href="#">Tournois</a>
+				<a href="/equipe">Equipe</a>
+				<a href="/contact">Contact</a>
+			</div>
+			<div class="nav-actions">
+				<a href="/reservation" class="btn-reserve">Réserver un court</a>
+				<a href="/profil" class="nav-account">Mon compte</a>
+			</div>
+		</div>
+	</nav>
+</header>
+
+<section class="page-hero">
+	<svg class="court-lines" viewBox="0 0 1100 260" preserveAspectRatio="xMidYMid slice">
+		<rect x="750" y="10" width="320" height="240" fill="none" stroke="#F6F4EC" stroke-width="2"/>
+		<line x1="750" y1="130" x2="1070" y2="130" stroke="#F6F4EC" stroke-width="2"/>
+	</svg>
+	<div class="wrap">
+		<span class="eyebrow">Administration</span>
+		<h1>Disponibilités</h1>
+		<p>Bloquez des créneaux pour l'entretien, les cours collectifs ou les tournois — les membres ne pourront plus les réserver.</p>
+	</div>
+</section>
+
+<section id="admin-guard-message" hidden>
+	<div class="wrap">
+		<p class="auth-error" style="display:block;">Accès réservé aux administrateurs. Redirection…</p>
+	</div>
+</section>
+
+<section id="admin-content">
+	<div class="wrap booking">
+		<div class="booking-panel">
+			<h3>Court</h3>
+			<div class="court-option selected" data-court-id="1">
+				<div>
+					<div class="name">Court 1</div>
+					<div class="type">Extérieur</div>
+				</div>
+			</div>
+			<div class="court-option" data-court-id="2">
+				<div>
+					<div class="name">Court 2</div>
+					<div class="type">Couvert</div>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<h3 style="margin-bottom: 16px;">Date</h3>
+			<div class="date-picker">
+				<div class="date-pill selected" data-date="2026-07-21"><span class="d">Lun 21</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-22"><span class="d">Mar 22</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-23"><span class="d">Mer 23</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-24"><span class="d">Jeu 24</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-25"><span class="d">Ven 25</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-26"><span class="d">Sam 26</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-27"><span class="d">Dim 27</span>juil.</div>
+			</div>
+
+			<h3 style="margin: 28px 0 4px;">Créneaux — Court 1, lundi 21 juillet</h3>
+
+			<div class="slot-legend">
+				<span class="legend-item"><span class="legend-swatch swatch-free"></span>Libre — cliquer pour bloquer</span>
+				<span class="legend-item"><span class="legend-swatch swatch-taken"></span>Réservé par un membre</span>
+				<span class="legend-item"><span class="legend-swatch swatch-unavailable"></span>Bloqué — cliquer pour débloquer</span>
+			</div>
+
+			<div class="slot-grid" id="admin-slot-grid">
+				<div class="slot taken" title="Réservé par Léa Morvan">9h – 10h</div>
+				<button type="button" class="slot slot-blockable" data-heure="10">10h – 11h</button>
+				<button type="button" class="slot slot-blockable" data-heure="11">11h – 12h</button>
+				<div class="slot unavailable slot-unblockable" data-id="12" title="Cliquer pour débloquer">
+					12h – 13h
+					<span class="slot-reason">Entretien</span>
+				</div>
+				<button type="button" class="slot slot-blockable" data-heure="14">14h – 15h</button>
+				<button type="button" class="slot slot-blockable" data-heure="15">15h – 16h</button>
+				<button type="button" class="slot slot-blockable" data-heure="16">16h – 17h</button>
+				<div class="slot taken" title="Réservé par Max Leost">17h – 18h</div>
+				<div class="slot unavailable slot-unblockable" data-id="18" title="Cliquer pour débloquer">
+					18h – 19h
+					<span class="slot-reason">Cours collectif</span>
+				</div>
+				<button type="button" class="slot slot-blockable" data-heure="19">19h – 20h</button>
+				<div class="slot taken" title="Réservé par Julien Perrot">20h – 21h</div>
+				<button type="button" class="slot slot-blockable" data-heure="21">21h – 22h</button>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- Modale de blocage d'un créneau -->
+<div class="modal-overlay" id="block-modal-overlay" hidden>
+	<div class="modal" role="dialog" aria-modal="true" aria-labelledby="block-modal-title">
+		<div class="modal-head">
+			<h3 id="block-modal-title">Bloquer un créneau</h3>
+			<button type="button" class="modal-close" id="block-modal-close" aria-label="Fermer">&times;</button>
+		</div>
+		<form id="block-form">
+			<p class="modal-slot-label"><span id="block-form-court-label">Court 2 · Intérieur</span> — <strong id="block-form-slot-label">10h – 11h</strong></p>
+			<div class="form-group">
+				<label for="block-raison">Raison du blocage</label>
+				<input type="text" name="raison" id="block-raison" placeholder="Ex: Entretien, cours collectif, tournoi…" required autofocus>
+			</div>
+			<div class="form-group form-group-submit">
+				<button type="submit" class="btn-primary">Bloquer ce créneau</button>
+				<button type="button" class="btn-outline btn-small" id="block-form-cancel">Annuler</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<section class="section-tinted" id="upcoming-section">
+	<div class="wrap">
+		<div class="block-head">
+			<h3>Indisponibilités à venir</h3>
+			<span class="block-count">4 créneaux bloqués</span>
+		</div>
+
+		<div class="admin-table-wrap">
+			<div class="dispo-table-head">
+				<span>Court</span>
+				<span>Date</span>
+				<span>Créneau</span>
+				<span>Raison</span>
+				<span>Actions</span>
+			</div>
+			<div id="dispo-list">
+
+				<div class="dispo-table-row" data-id="12">
+					<span>Court 1 · Extérieur</span>
+					<span>Lun 21 juillet</span>
+					<span>12h – 13h</span>
+					<span>Entretien</span>
+					<span class="admin-actions">
+						<button type="button" class="btn-outline btn-small delete-btn">Débloquer</button>
+					</span>
+				</div>
+
+				<div class="dispo-table-row" data-id="18">
+					<span>Court 1 · Extérieur</span>
+					<span>Lun 21 juillet</span>
+					<span>18h – 19h</span>
+					<span>Cours collectif</span>
+					<span class="admin-actions">
+						<button type="button" class="btn-outline btn-small delete-btn">Débloquer</button>
+					</span>
+				</div>
+
+				<div class="dispo-table-row" data-id="24">
+					<span>Court 2 · Couvert</span>
+					<span>Mer 23 juillet</span>
+					<span>9h – 12h</span>
+					<span>Tournoi amical d'été</span>
+					<span class="admin-actions">
+						<button type="button" class="btn-outline btn-small delete-btn">Débloquer</button>
+					</span>
+				</div>
+
+				<div class="dispo-table-row" data-id="30">
+					<span>Court 1 · Extérieur</span>
+					<span>Sam 26 juillet</span>
+					<span>8h – 9h</span>
+					<span>Entretien filet</span>
+					<span class="admin-actions">
+						<button type="button" class="btn-outline btn-small delete-btn">Débloquer</button>
+					</span>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+<footer>
+	<div class="wrap">
+		<div>
+			<h4>TC Lanrivoaré</h4>
+			<p>Mairie, 29290 Lanrivoaré</p>
+			<p>02 98 84 36 43</p>
+			<p>Accès PMR · parking adapté</p>
+		</div>
+		<div>
+			<h4>Le club</h4>
+			<ul>
+				<li><a href="#">École de tennis</a></li>
+				<li><a href="#">Nos équipes</a></li>
+				<li><a href="#">Tournois</a></li>
+			</ul>
+		</div>
+		<div>
+			<h4>Réserver</h4>
+			<ul>
+				<li><a href="/reservation">Réserver un court</a></li>
+				<li><a href="#">Devenir membre</a></li>
+				<li><a href="#">Nous contacter</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="foot-bottom">Tennis Club de Lanrivoaré — site réalisé à titre de démonstration</div>
+</footer>
+
+</body>
+</html>
