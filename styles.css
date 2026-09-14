@@ -204,6 +204,7 @@ section { padding: 80px 0; }
 }
 .slot.taken { color: #B0A98D; text-decoration: line-through; cursor: not-allowed; background: transparent; }
 .slot.selected { background: var(--clay); color: var(--chalk); border-color: var(--clay); }
+.slot.selected:hover { background: var(--clay-dark); border-color: var(--clay-dark); }
 .booking-summary {
 	margin-top: 28px; padding-top: 20px; border-top: 1px solid #DAD2B8;
 	display: flex; align-items: center; justify-content: space-between;
@@ -236,7 +237,7 @@ section { padding: 80px 0; }
 	padding: 8px 4px;
 }
 .slot-reason {
-	font-size: 10px; font-style: italic; text-transform: none; letter-spacing: normal;
+	font-size: 10px; font-style: italic;
 }
  
 
@@ -379,6 +380,20 @@ section { padding: 80px 0; }
 .section-note { font-size: 13px; color: var(--ink-soft); font-style: italic; margin-top: 18px; }
 .section-note code {
 	background: #DAD2B8; padding: 2px 6px; font-size: 12px; border-radius: 2px;
+}
+
+.modal-body { margin-bottom: 20px; }
+.modal-note {
+	font-size: 13px; color: var(--ink-soft); margin-top: 10px;
+}
+.modal-status {
+	font-size: 13px; font-weight: 600; margin-top: 12px; padding: 10px 12px;
+}
+.modal-status.error { background: #FBEFE6; color: var(--clay); }
+.modal-status.success { background: #E1F0E5; color: var(--court-green); }
+ 
+.modal-actions {
+	display: flex; align-items: center; gap: 12px;
 }
 
 /* Badge de rôle (visiteur / membre / admin) */
@@ -546,6 +561,14 @@ footer ul { list-style: none; }
  
 .slot-unblockable { cursor: pointer; }
 .slot-unblockable:hover { outline: 2px solid var(--clay); outline-offset: -2px; }
+
+.slot.past {
+	color: #B0A98D;
+	background: transparent;
+	cursor: not-allowed;
+	text-decoration: line-through;
+	opacity: 0.6;
+}
  
 .block-form .form-group-submit { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
  
@@ -582,6 +605,28 @@ footer ul { list-style: none; }
 .dispo-table-head {
 	font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
 	color: var(--ink-soft); background: #EFEBDD; border-top: none;
+}
+
+/* TAOST NOTIF */
+.toast-notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #1a1a1a;
+    color: #ffffff;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    font-weight: 500;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 @media (max-width: 780px) {

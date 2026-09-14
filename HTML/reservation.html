@@ -10,6 +10,8 @@
 	<link rel="stylesheet" href="/styles.css">
 	<script src="/JS/nav.js" defer></script>
 	<script src="/JS/session.js" defer></script>
+    <script src="/JS/format_grid.js" defer></script>
+	<script src="/JS/reservations.js" defer></script>
 </head>
 <body>
 
@@ -55,13 +57,13 @@
 	<div class="wrap booking">
 		<div class="booking-panel">
 			<h3>Court</h3>
-			<div class="court-option selected">
+			<div class="court-option selected" data-court-id="1">
 				<div>
 					<div class="name">Court 1</div>
 					<div class="type">Extérieur</div>
 				</div>
 			</div>
-			<div class="court-option">
+			<div class="court-option" data-court-id="2">
 				<div>
 					<div class="name">Court 2</div>
 					<div class="type">Couvert</div>
@@ -72,13 +74,13 @@
 		<div>
 			<h3 style="margin-bottom: 16px;">Date</h3>
 			<div class="date-picker">
-				<div class="date-pill selected"><span class="d">Lun 21</span>juil.</div>
-				<div class="date-pill"><span class="d">Mar 22</span>juil.</div>
-				<div class="date-pill"><span class="d">Mer 23</span>juil.</div>
-				<div class="date-pill"><span class="d">Jeu 24</span>juil.</div>
-				<div class="date-pill"><span class="d">Ven 25</span>juil.</div>
-				<div class="date-pill"><span class="d">Sam 26</span>juil.</div>
-				<div class="date-pill"><span class="d">Dim 27</span>juil.</div>
+				<div class="date-pill selected" data-date="2026-07-20"><span class="d">Lun 20</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-21"><span class="d">Mar 21</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-22"><span class="d">Mer 22</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-23"><span class="d">Jeu 23</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-24"><span class="d">Ven 24</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-25"><span class="d">Sam 25</span>juil.</div>
+				<div class="date-pill" data-date="2026-07-26"><span class="d">Dim 26</span>juil.</div>
 			</div>
 
 			<h3 style="margin: 28px 0 4px;">Créneaux disponibles</h3>
@@ -89,34 +91,59 @@
 				<span class="legend-item"><span class="legend-swatch swatch-unavailable"></span>Indisponible</span>
 			</div>
 
-			<div class="slot-grid">
+			<div class="slot-grid" id="hours-slot-grid">
 				<div class="slot taken" title="Réservé par un autre membre">9h – 10h</div>
-				<div class="slot">10h – 11h</div>
-				<div class="slot">11h – 12h</div>
+				<div class="slot slot-blockable">10h – 11h</div>
+				<div class="slot slot-blockable">11h – 12h</div>
 				<div class="slot unavailable" title="Entretien du court">
 					12h – 13h
 					<span class="slot-reason">Entretien</span>
 				</div>
-				<div class="slot">14h – 15h</div>
-				<div class="slot selected">15h – 16h</div>
-				<div class="slot">16h – 17h</div>
+				<div class="slot slot-blockable">14h – 15h</div>
+				<div class="slot slot-blockable selected">15h – 16h</div>
+				<div class="slot slot-blockable">16h – 17h</div>
 				<div class="slot taken" title="Réservé par un autre membre">17h – 18h</div>
 				<div class="slot unavailable" title="Cours collectif école de tennis">
 					18h – 19h
 					<span class="slot-reason">Cours collectif</span>
 				</div>
-				<div class="slot">19h – 20h</div>
+				<div class="slot slot-blockable">19h – 20h</div>
 				<div class="slot taken" title="Réservé par un autre membre">20h – 21h</div>
-				<div class="slot">21h – 22h</div>
+				<div class="slot slot-blockable">21h – 22h</div>
 			</div>
 
 			<div class="booking-summary">
-				<p>Court 1 (extérieur) · Lun 21 juillet · <strong>15h – 16h</strong></p>
-				<a href="#" class="btn-primary">Confirmer</a>
+				<p><strong></strong></p>
+				<button type="button" class="btn-primary" id="open-confirm-modal">Confirmer</button>
 			</div>
 		</div>
 	</div>
 </section>
+
+<!-- Modale de confirmation de réservation -->
+<div class="modal-overlay" id="confirm-modal-overlay" hidden>
+	<div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+		<div class="modal-head">
+			<h3 id="confirm-modal-title">Confirmer la réservation</h3>
+			<button type="button" class="modal-close" id="confirm-modal-close" aria-label="Fermer">&times;</button>
+		</div>
+
+		<div class="modal-body">
+			<p class="modal-slot-label">
+				<span id="confirm-court-label">Court 1 · Extérieur</span><br>
+				<span id="confirm-date-label">Lundi 21 juillet</span> ·
+				<strong id="confirm-slot-label">15h – 16h</strong>
+			</p>
+			<p class="modal-note">La confirmation est immédiate — vous pouvez annuler ce créneau depuis votre profil jusqu'à 24h avant.</p>
+			<p class="modal-status" id="confirm-modal-status" hidden></p>
+		</div>
+
+		<div class="modal-actions">
+			<button type="button" class="btn-primary" id="confirm-booking-btn">Confirmer la réservation</button>
+			<button type="button" class="btn-outline btn-small" id="confirm-modal-cancel">Annuler</button>
+		</div>
+	</div>
+</div>
 
 <footer>
 	<div class="wrap">
