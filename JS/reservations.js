@@ -96,9 +96,10 @@ confirmBookingBtn.onclick = async () => {
 	}
 
 	try {
+        const currentUser = JSON.parse(localStorage.getItem("user"));
         const infos = {
             courtId: parseInt(document.querySelector(".court-option.selected").getAttribute("data-court-id")),
-            userId: JSON.parse(localStorage.getItem("user")).id,
+            userId: currentUser.id,
             date: new Date(document.querySelector(".date-pill.selected").getAttribute("data-date")),
             heureDebut: parseInt(document.querySelector(".slot.selected").getAttribute("data-heure"))
         }
@@ -126,12 +127,12 @@ confirmBookingBtn.onclick = async () => {
             date: document.querySelector(".date-pill.selected").getAttribute("data-date") + "T00:00:00.000Z",
             heureDebut: infos.heureDebut,
             user: {
-                prenom: JSON.parse(localStorage.getItem("user")).prenom,
-                nom: JSON.parse(localStorage.getItem("user")).nom
+                prenom: currentUser.prenom,
+                nom: currentUser.nom
             }
         });
         disponibilityModal.hidden = true;
-        showToast(`Votre créneau a été réservé avec succès ${JSON.parse(localStorage.getItem("user")).prenom} !`);
+        showToast(`Votre créneau a été réservé avec succès ${currentUser.prenom} !`);
         renderGrid();
 	} catch (err) {
 		showError("Erreur réseau, réessaie plus tard.");

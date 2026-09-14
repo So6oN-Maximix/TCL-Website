@@ -1,5 +1,6 @@
 const express = require("express");
 const prisma = require("../lib/prisma");
+const { sendBookingConfirmationMail } = require("../lib/mailer")
 
 const router = express.Router();
 
@@ -58,6 +59,14 @@ router.post("/booking", async (req, res) => {
     try {
         const { courtId, userId, date, heureDebut } = req.body;
         const userBooking = await prisma.booking.create({ data: { courtId, userId, date, heureDebut } });
+        const user = await prisma.user.findUnique({ 
+            where: { id: userId },
+            select: { email: true, prenom: true }
+        });
+        const dateOptions = { weekday: "long", day: "numeric", month: "long" };
+        const dateStr = new Date(date).toLocaleDateString("fr-FR", dateOptions);
+        sendBookingConfirmationMail(user.email, user.prenom, `Court ${courtId}`, dateStr, heureDebut)
+            .catch(err => console.error("Erreur lors de l'envoi du mail de réservation :", err));
         res.status(200).json({ message: `Booking successfully added for ID ${userId}`, userBooking });
     } catch (error) {
 		console.error(error);
