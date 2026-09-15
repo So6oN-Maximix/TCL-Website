@@ -26,6 +26,12 @@ function formatDate(date) {
     return `${yyyy}-${mm}-${dd}`;
 }
 
+function formatLongDate(date) {
+    const dateFormat = new Date(date);
+    const dateOptions = {weekday: "long", day: "numeric", month: "long"};
+    return dateFormat.toLocaleDateString("fr-FR", dateOptions).split(" ").map(mot => mot.charAt(0).toUpperCase() + mot.slice(1)).join(" ");
+}
+
 async function getIndisponibilite() {
 	try {
 		const res = await fetch("/api/reserveCourt/indispo", {
@@ -82,6 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     allIndisponibilites = await getIndisponibilite();
     allBookings = await getBookings();
     renderGrid();
+    loadBlockList();
 });
 
 datePicker.addEventListener("click", event => {
@@ -89,11 +96,13 @@ datePicker.addEventListener("click", event => {
         datePicker.querySelector(".selected").classList.remove("selected");
         event.target.classList.add("selected");
         renderGrid();
+        loadBlockList();
     }
     if (event.target.classList.contains("d")) {
         datePicker.querySelector(".selected").classList.remove("selected");
         event.target.parentElement.classList.add("selected");
         renderGrid();
+        loadBlockList();
     }
 });
 
@@ -102,5 +111,6 @@ courtPicker.addEventListener("click", event => {
         courtPicker.querySelector(".selected").classList.remove("selected");
         event.target.classList.add("selected");
         renderGrid();
+        loadBlockList();
     }
 });

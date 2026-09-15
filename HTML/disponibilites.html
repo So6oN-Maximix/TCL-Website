@@ -136,6 +136,39 @@
 	</div>
 </div>
 
+<!-- Modale de déblocage d'un créneau -->
+<div class="modal-overlay" id="unblock-modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="unblock-modal-title">
+        <div class="modal-head">
+            <h3 id="unblock-modal-title">Débloquer un créneau</h3>
+            <button type="button" class="modal-close" id="unblock-modal-close" aria-label="Fermer">&times;</button>
+        </div>
+        <form id="unblock-form">
+            
+            <!-- Encart d'informations structuré -->
+            <div style="background-color: rgba(0, 0, 0, 0.03); border-left: 4px solid var(--clay); padding: 16px; margin-bottom: 20px; border-radius: 4px;">
+                <ul style="list-style: none; padding: 0; margin: 0; line-height: 1.8; color: #333;">
+                    <li><strong>Court :</strong> <span id="unblock-info-court">...</span></li>
+                    <li><strong>Date :</strong> <span id="unblock-info-date">...</span></li>
+                    <li><strong>Créneau :</strong> <span id="unblock-info-heure">...</span></li>
+                    <li><strong>Raison :</strong> <span id="unblock-info-raison">...</span></li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <p style="margin: 0; color: #555; font-size: 0.95em;">
+                    Êtes-vous sûr de vouloir débloquer cette plage horaire ? Elle redeviendra immédiatement disponible pour les membres.
+                </p>
+            </div>
+            
+            <div class="form-group form-group-submit" style="margin-top: 24px;">
+                <button type="submit" class="btn-primary">Confirmer le déblocage</button>
+                <button type="button" class="btn-outline btn-small" id="unblock-form-cancel">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <section class="section-tinted" id="upcoming-section">
 	<div class="wrap">
 		<div class="block-head">
@@ -151,49 +184,7 @@
 				<span>Raison</span>
 				<span>Actions</span>
 			</div>
-			<div id="dispo-list">
-
-				<div class="dispo-table-row" data-id="12">
-					<span>Court 1 · Extérieur</span>
-					<span>Lun 21 juillet</span>
-					<span>12h – 13h</span>
-					<span>Entretien</span>
-					<span class="admin-actions">
-						<button type="button" class="btn-outline btn-small delete-btn">Débloquer</button>
-					</span>
-				</div>
-
-				<div class="dispo-table-row" data-id="18">
-					<span>Court 1 · Extérieur</span>
-					<span>Lun 21 juillet</span>
-					<span>18h – 19h</span>
-					<span>Cours collectif</span>
-					<span class="admin-actions">
-						<button type="button" class="btn-outline btn-small delete-btn">Débloquer</button>
-					</span>
-				</div>
-
-				<div class="dispo-table-row" data-id="24">
-					<span>Court 2 · Couvert</span>
-					<span>Mer 23 juillet</span>
-					<span>9h – 12h</span>
-					<span>Tournoi amical d'été</span>
-					<span class="admin-actions">
-						<button type="button" class="btn-outline btn-small delete-btn">Débloquer</button>
-					</span>
-				</div>
-
-				<div class="dispo-table-row" data-id="30">
-					<span>Court 1 · Extérieur</span>
-					<span>Sam 26 juillet</span>
-					<span>8h – 9h</span>
-					<span>Entretien filet</span>
-					<span class="admin-actions">
-						<button type="button" class="btn-outline btn-small delete-btn">Débloquer</button>
-					</span>
-				</div>
-
-			</div>
+			<div id="dispo-list"></div>
 		</div>
 	</div>
 </section>

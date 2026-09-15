@@ -38,12 +38,6 @@ function renderGrid() {
     });
 }
 
-function formatLongDate(date) {
-    const dateFormat = new Date(date);
-    const dateOptions = {weekday: "long", day: "numeric", month: "long"};
-    return dateFormat.toLocaleDateString("fr-FR", dateOptions);
-}
-
 function loadBookingSummary(targetEvent) {
     const selectedDate = document.querySelector(".date-pill.selected");
     const selectedCourt = document.querySelector(".court-option.selected");
@@ -66,6 +60,8 @@ function showToast(message) {
         setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
+
+function loadBlockList() {}
 
 const hoursParent = document.getElementById("hours-slot-grid");
 const confirmBtn = document.getElementById("open-confirm-modal");

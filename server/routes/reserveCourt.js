@@ -4,6 +4,13 @@ const { sendBookingConfirmationMail } = require("../lib/mailer")
 
 const router = express.Router();
 
+function formatDate(date) {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+}
+
 router.post("/block", async (req, res) => {
     try {
 		const { courtId, date, heureDebut, raison } = req.body;
@@ -17,13 +24,49 @@ router.post("/block", async (req, res) => {
 
 router.get("/indispo", async (req, res) => {
     try {
+        const now = new Date();
+        const currentHour = now.getHours();
+
+        const today = new Date(now);
+        today.setUTCHours(0, 0, 0, 0);
+
+        const tomorrow = new Date(today);
+        tomorrow.setUTCDate(today.getUTCDate() + 1);
+
+        const nextWeek = new Date(today);
+        nextWeek.setUTCDate(today.getUTCDate() + 7);
+
 		const indisponibilites = await prisma.indisponibilite.findMany({
 			select: {
                 courtId: true,
                 date: true,
                 heureDebut: true,
-                raison: true
-            }
+                raison: true,
+                court: {
+                    select: {
+                        nom: true,
+                        type: true
+                    }
+                }
+            },
+            where: {
+                OR: [
+                    {
+                        date: today,
+                        heureDebut: { gt: currentHour } 
+                    },
+                    {
+                        date: {
+                            gte: tomorrow,
+                            lte: nextWeek
+                        }
+                    }
+                ]
+            },
+            orderBy: [
+                { date: "asc" },
+                { heureDebut: "asc" }
+            ]
         });
 		res.json(indisponibilites);
     } catch (error) {
