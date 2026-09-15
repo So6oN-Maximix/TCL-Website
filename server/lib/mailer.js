@@ -85,7 +85,7 @@ async function sendBookingConfirmationMail(email, prenom, courtName, dateStr, he
                     <div style="background-color: #E9E2CE; border-left: 4px solid #1B4332; padding: 20px; margin: 25px 0; border-radius: 0 4px 4px 0;">
                         <ul style="list-style: none; padding: 0; margin: 0;">
                             <li style="margin-bottom: 10px;"><strong>Court :</strong> ${courtName}</li>
-                            <li style="margin-bottom: 10px;"><strong>Date :</strong> ${dateStr}</li>
+                            <li style="margin-bottom: 10px;"><strong>Date :</strong> ${dateStr.split(" ").map(mot => mot.charAt(0).toUpperCase() + mot.slice(1)).join(" ")}</li>
                             <li style="margin-bottom: 0;"><strong>Heure :</strong> ${heureDebut}h00 - ${heureFin}h00</li>
                         </ul>
                     </div>
