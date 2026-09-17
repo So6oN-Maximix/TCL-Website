@@ -1,15 +1,8 @@
 const express = require("express");
 const prisma = require("../lib/prisma");
-const { sendBookingConfirmationMail } = require("../lib/mailer")
+const { sendBookingConfirmationMail, sendCancelConfirmationMail } = require("../lib/mailer")
 
 const router = express.Router();
-
-function formatDate(date) {
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, "0");
-    const dd = String(date.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-}
 
 router.post("/block", async (req, res) => {
     try {
@@ -88,6 +81,12 @@ router.get("/bookings", async (req, res) => {
                         prenom: true,
                         nom: true
                     }
+                },
+                court: {
+                    select: {
+                        nom: true,
+                        type: true
+                    }
                 }
             }
         });
@@ -102,15 +101,48 @@ router.post("/booking", async (req, res) => {
     try {
         const { courtId, userId, date, heureDebut } = req.body;
         const userBooking = await prisma.booking.create({ data: { courtId, userId, date, heureDebut } });
-        const user = await prisma.user.findUnique({ 
-            where: { id: userId },
-            select: { email: true, prenom: true }
+        const user = await prisma.user.findUnique({
+            select: { email: true, prenom: true },
+            where: { id: userId }
+        });
+        const court = await prisma.court.findUnique({
+            select: { nom: true },
+            where: { id: courtId }
         });
         const dateOptions = { weekday: "long", day: "numeric", month: "long" };
         const dateStr = new Date(date).toLocaleDateString("fr-FR", dateOptions);
-        sendBookingConfirmationMail(user.email, user.prenom, `Court ${courtId}`, dateStr, heureDebut)
+        sendBookingConfirmationMail(user.email, user.prenom, court.nom, dateStr, heureDebut)
             .catch(err => console.error("Erreur lors de l'envoi du mail de réservation :", err));
         res.status(200).json({ message: `Booking successfully added for ID ${userId}`, userBooking });
+    } catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+router.post("/cancel", async (req, res) => {
+    try {
+        const { courtId, userId, date, heureDebut } = req.body;
+        const deleteElement = await prisma.booking.deleteMany({
+            where: {
+                courtId: parseInt(courtId),
+                date: new Date(date),
+                heureDebut: parseInt(heureDebut)
+            }
+        });
+        const user = await prisma.user.findUnique({
+            select: { email: true, prenom: true },
+            where: { id: userId }
+        });
+        const court = await prisma.court.findUnique({
+            select: { nom: true },
+            where: { id: courtId }
+        });
+        const dateOptions = { weekday: "long", day: "numeric", month: "long" };
+        const dateStr = new Date(date).toLocaleDateString("fr-FR", dateOptions);
+        sendCancelConfirmationMail(user.email, user.prenom, court.nom, dateStr, heureDebut)
+            .catch(err => console.error("Erreur lors de l'envoi du mail d'annulation :", err));
+        res.status(200).json({ message: `Booking successfully deleted`, deleteElement });
     } catch (error) {
 		console.error(error);
 		res.status(500).json({ error: "Erreur serveur" });

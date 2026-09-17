@@ -70,7 +70,8 @@ router.post("/add", async (req, res) => {
 		const user = await prisma.user.create({ data: { prenom, nom, email, password: hashedPassword, sexe, role, poste, cotisationPayed: cotisation } });
 		res.status(200).json({ message: "User successfully added", user });
 	} catch (error) {
-		console.log("Error while adding player :", error);
+		console.error(err);
+		res.status(500).json({ error: 'Erreur serveur' });
 	}
 });
 
@@ -84,9 +85,24 @@ router.post("/save", async (req, res) => {
 
 		res.status(200).json({ message: "User successfully saved", updatedUser });
 	} catch (error) {
-		console.log("Error while saving player : ", error);
+		console.error(err);
+		res.status(500).json({ error: 'Erreur serveur' });
 	}
-})
+});
+
+router.post("/modify", async (req, res) => {
+	try {
+		const {userId, prenom, nom, email, phone} = req.body;
+		const updatedUser = await prisma.user.update({
+			where: { id: userId },
+			data: { prenom, nom, email, phone }
+		});
+		res.status(200).json({ message: "User successfully updated", updatedUser });
+	} catch (error) {
+		console.error(err);
+		res.status(500).json({ error: 'Erreur serveur' });
+	}
+});
 
 const ordrePostes = {
 	"PRESIDENT": 1,

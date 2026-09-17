@@ -117,6 +117,10 @@ confirmBookingBtn.onclick = async () => {
 			return;
 		}
 
+        const selectedCourt = document.querySelector(".court-option.selected");
+        const courtName = selectedCourt.querySelector(".name").innerText;
+        const courtType = selectedCourt.querySelector(".type").innerText;
+
         allBookings.push({
             courtId: infos.courtId,
             userId: infos.userId,
@@ -125,6 +129,10 @@ confirmBookingBtn.onclick = async () => {
             user: {
                 prenom: currentUser.prenom,
                 nom: currentUser.nom
+            },
+            court: {
+                nom: courtName,
+                type: courtType
             }
         });
         disponibilityModal.hidden = true;

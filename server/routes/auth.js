@@ -90,6 +90,7 @@ router.get('/me', requireAuth, async (req, res) => {
 			licence: user.licence,
 			phone: user.phone,
 			role: user.role,
+			cotisationPayed: user.cotisationPayed
 		});
 	} catch (err) {
 		console.error(err);

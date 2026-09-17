@@ -95,7 +95,7 @@ nav.wrap {
 .hero p { font-size: 18px; color: #D9E4DC; max-width: 480px; margin-bottom: 34px; }
 .hero-ctas { display: flex; gap: 16px; }
 .btn-primary {
-	background: var(--clay); color: var(--chalk); padding: 14px 26px;
+	background: var(--clay); color: var(--chalk); padding: 10px 26px;
 	font-weight: 600; font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em;
 	border-radius: 2px; display: inline-block; cursor: pointer;
 }
@@ -211,6 +211,16 @@ section { padding: 80px 0; }
 }
 .booking-summary p { font-size: 14px; color: var(--ink-soft); }
 .booking-summary strong { color: var(--ink); }
+
+.booking-item-actions {
+	display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+}
+.btn-cancel-booking {
+	background: transparent; border: none; padding: 0; cursor: pointer;
+	font-family: inherit; font-size: 12px; font-weight: 600;
+	color: var(--clay); text-decoration: underline;
+}
+.btn-cancel-booking:hover { color: var(--clay-dark); }
 
 .slot-legend {
 	display: flex; gap: 20px; margin-bottom: 14px; flex-wrap: wrap;
@@ -329,7 +339,7 @@ section { padding: 80px 0; }
 	cursor: pointer; font-family: inherit;
 }
 .btn-outline:hover { background: var(--clay); color: var(--chalk); }
-.btn-small { padding: 6px 12px; font-size: 12px; }
+.btn-small { padding: 10px 12px; font-size: 12px; }
 
 .info-list { border-top: 1px solid #DAD2B8; }
 .info-row {

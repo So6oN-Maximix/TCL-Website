@@ -103,7 +103,7 @@
 <section id="informations">
 	<div class="wrap">
 		<div class="profile-grid">
-			<div>
+			<div id="personal-info">
 				<div class="block-head">
 					<h3>Informations</h3>
 					<button type="button" class="btn-outline btn-small">Modifier</button>
@@ -127,47 +127,68 @@
 
 				<div class="reservations-group">
 					<div class="reservations-label">À venir</div>
-					<div class="info-list">
-						<div class="booking-item">
-							<div>
-								<span class="booking-court">Court 1 (extérieur)</span>
-								<span class="booking-when">Lun 21 juillet · 15h – 16h</span>
-							</div>
-							<span class="booking-status confirmed">Confirmée</span>
-						</div>
-						<div class="booking-item">
-							<div>
-								<span class="booking-court">Court 2 (couvert)</span>
-								<span class="booking-when">Jeu 24 juillet · 18h – 19h</span>
-							</div>
-							<span class="booking-status confirmed">Confirmée</span>
-						</div>
-						<div class="booking-item">
-							<div>
-								<span class="booking-court">Court 1 (extérieur)</span>
-								<span class="booking-when">Sam 26 juillet · 10h – 11h</span>
-							</div>
-							<span class="booking-status confirmed">Confirmée</span>
-						</div>
-					</div>
+					<div class="info-list"></div>
 
 					<div class="reservations-label">Passées</div>
-					<div class="info-list">
-						<div class="booking-item">
-							<div>
-								<span class="booking-court">Court 2 (couvert)</span>
-								<span class="booking-when">Jeu 17 juillet · 18h – 19h</span>
-							</div>
-							<span class="booking-status past">Passée</span>
-						</div>
-						<div class="booking-item">
-							<div>
-								<span class="booking-court">Court 1 (extérieur)</span>
-								<span class="booking-when">Sam 12 juillet · 10h – 11h</span>
-							</div>
-							<span class="booking-status past">Passée</span>
-						</div>
+					<div class="info-list"></div>
+				</div>
+			</div>
+
+			<!-- Modale de confirmation d'annulation -->
+			<div class="modal-overlay" id="cancel-booking-modal-overlay" hidden>
+				<div class="modal" role="dialog" aria-modal="true" aria-labelledby="cancel-booking-modal-title">
+					<div class="modal-head">
+						<h3 id="cancel-booking-modal-title">Annuler la réservation</h3>
+						<button type="button" class="modal-close" id="cancel-booking-modal-close" aria-label="Fermer">&times;</button>
 					</div>
+
+					<div class="modal-body">
+						<p class="modal-slot-label" id="cancel-booking-summary">Court 1 (extérieur) · Lun 21 juillet · <strong>15h – 16h</strong></p>
+						<p class="modal-note">Cette action est définitive. Le créneau redeviendra disponible pour les autres membres.</p>
+						<p class="modal-status" id="cancel-booking-status" hidden></p>
+					</div>
+
+					<div class="modal-actions">
+						<button type="button" class="btn-primary" id="confirm-cancel-booking-btn">Oui, annuler la réservation</button>
+						<button type="button" class="btn-outline btn-small" id="cancel-booking-modal-dismiss">Retour</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Modale d'édition des informations du compte -->
+			<div class="modal-overlay" id="edit-profile-modal-overlay" hidden>
+				<div class="modal" role="dialog" aria-modal="true" aria-labelledby="edit-profile-modal-title">
+					<div class="modal-head">
+						<h3 id="edit-profile-modal-title">Modifier mes informations</h3>
+						<button type="button" class="modal-close" id="edit-profile-modal-close" aria-label="Fermer">&times;</button>
+					</div>
+
+					<form id="edit-profile-form">
+						<div class="form-group">
+							<label for="edit-prenom">Prénom</label>
+							<input type="text" id="edit-prenom" name="prenom" required>
+						</div>
+						<div class="form-group">
+							<label for="edit-nom">Nom</label>
+							<input type="text" id="edit-nom" name="nom" required>
+						</div>
+						<div class="form-group">
+							<label for="edit-email">E-mail</label>
+							<input type="email" id="edit-email" name="email" required>
+						</div>
+						<div class="form-group">
+							<label for="edit-phone">Téléphone</label>
+							<input type="tel" id="edit-phone" name="phone" required>
+						</div>
+
+						<p class="modal-note">Le numéro de licence FFT, le rôle et le statut de cotisation ne sont modifiables que par le bureau du club.</p>
+						<p class="modal-status" id="edit-profile-status" hidden></p>
+
+						<div class="modal-actions">
+							<button type="submit" class="btn-primary" id="save-profile-btn">Enregistrer</button>
+							<button type="button" class="btn-outline btn-small" id="edit-profile-modal-cancel">Annuler</button>
+						</div>
+					</form>
 				</div>
 			</div>
 
