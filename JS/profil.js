@@ -190,10 +190,6 @@ function setupPasswordForm() {
 			showError("Merci de remplir tous les champs.");
 			return;
 		}
-		if (next.length < 8) {
-			showError("Le nouveau mot de passe doit contenir au moins 8 caractères.");
-			return;
-		}
 		if (next !== confirm) {
 			showError("Les deux mots de passe ne correspondent pas.");
 			return;

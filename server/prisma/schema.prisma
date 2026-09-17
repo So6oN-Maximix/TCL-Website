@@ -65,6 +65,7 @@ model News {
 	titre           String
 	contenu         String
 	categorie       String
+	adminId			Int
 	datePublication DateTime @default(now())
 }
 

@@ -8,6 +8,7 @@ const usersRoutes = require("./routes/users");
 const teamsRoutes = require("./routes/teams");
 const reservationRoutes = require("./routes/reserveCourt");
 const contactRoutes = require("./routes/contact");
+const actualitesRoutes = require("./routes/actualites");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use("/api/users", usersRoutes);
 app.use("/api/teams", teamsRoutes);
 app.use("/api/reserveCourt", reservationRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/actualites", actualitesRoutes);
 
 app.get("/", (req, res) => res.sendFile(path.join(root, "index.html")));
 
