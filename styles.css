@@ -645,6 +645,46 @@ footer ul { list-style: none; }
     transform: translateY(0);
 }
 
+/* PAGE TOURNOIS */
+.tournament-card {
+	display: grid; grid-template-columns: 90px 1fr 220px; gap: 24px; align-items: center;
+	background: var(--chalk); border: 1px solid #DAD2B8; padding: 24px;
+}
+ 
+.tournament-date-block {
+	display: flex; flex-direction: column; align-items: center; justify-content: center;
+	background: var(--court-green); color: var(--chalk); padding: 16px 8px; text-align: center;
+}
+.tournament-day {
+	font-family: "Oswald", sans-serif; font-size: 30px; font-weight: 700; line-height: 1;
+}
+.tournament-month {
+	font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ball); margin-top: 4px;
+}
+ 
+.tournament-info h3 {
+	font-size: 18px; color: var(--ink); font-weight: 600; margin: 10px 0 8px; text-transform: none; letter-spacing: 0;
+}
+.tournament-info p { font-size: 14px; color: var(--ink-soft); margin-bottom: 12px; }
+.tournament-meta {
+	display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--ink-soft);
+}
+ 
+.tournament-action {
+	display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+}
+.tournament-status {
+	font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+	padding: 4px 10px;
+}
+.tournament-status.open { background: #E1F0E5; color: var(--court-green); }
+.tournament-status.soon { background: #EFEBDD; color: var(--ink-soft); }
+.tournament-deadline { font-size: 12px; color: var(--ink-soft); }
+ 
+.tournament-action .btn-outline[disabled] {
+	opacity: 0.5; cursor: not-allowed;
+}
+
 @media (max-width: 780px) {
 	.team-grid { grid-template-columns: 1fr; }
 	.admin-table-head-full { display: none; }
@@ -658,6 +698,9 @@ footer ul { list-style: none; }
 		grid-template-columns: 1fr; gap: 8px; text-align: left; padding: 18px;
 	}
 	.team-create-form { grid-template-columns: 1fr; }
+	.tournament-card { grid-template-columns: 1fr; }
+	.tournament-date-block { flex-direction: row; gap: 10px; width: fit-content; padding: 10px 16px; }
+	.tournament-action { align-items: flex-start; }
 }
 
 @media (max-width: 860px) {
