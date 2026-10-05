@@ -149,4 +149,44 @@ router.post("/cancel", async (req, res) => {
     }
 });
 
+router.post("/recuringBlock", async (req, res) => {
+    try {
+        const dataForm = req.body;
+
+        const formattedDays = dataForm.jours.map(day => parseInt(day));
+        const intervalles = [];
+        for (let i = parseInt(dataForm.heureDebut); i < parseInt(dataForm.heureFin); i++) intervalles.push(i);
+        const currentDate = new Date(dataForm.startDate);
+
+        let endDate;
+        if (dataForm.recurrenceEnd === "on-date") endDate = new Date(dataForm.dateFin);
+        else if (dataForm.recurrenceEnd === "after-count") {
+            endDate = new Date(currentDate);
+            endDate.setDate(currentDate.getDate() + 7 * parseInt(dataForm.occurrences) - 1);
+        }
+        endDate.setHours(23, 59, 59, 999);
+
+        const toPushToPrisma = [];
+        while (currentDate <= endDate) {
+            if (formattedDays.includes(currentDate.getDay())) {
+                const fixedDate = new Date(currentDate);
+                intervalles.forEach(async hour => {
+                    toPushToPrisma.push({
+                        courtId: parseInt(dataForm.court),
+                        date: fixedDate,
+                        heureDebut: hour,
+                        raison: dataForm.raison
+                    });
+                });
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        if (toPushToPrisma.length > 0) await prisma.indisponibilite.createMany({ data: toPushToPrisma });
+        res.status(200).json({ message: `Recuring block successfully added`, toPushToPrisma });
+    } catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
 module.exports = router;

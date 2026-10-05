@@ -35,6 +35,25 @@ function hydrateFromStoredUser() {
     applyUserToDom(user);
 }
 
+async function updateUserHeader(userId, cotisation) {
+	const headerElement = document.querySelectorAll(".profile-stats")[0];
+	const allInfos = headerElement.querySelectorAll(".num");
+
+	const headerInfoRes = await fetch(`/api/users/header?userId=${userId}`, {
+		method: "GET",
+		headers: { "Content-Type": "application/json" }
+	});
+	const headerInfo = await headerInfoRes.json();
+	const diffDateMs = new Date(Date.now()) - new Date(headerInfo.licenceYear);
+	const diffDateYear = Math.floor(diffDateMs / (1000 * 60 * 60 * 24 * 365));
+	
+	allInfos[0].innerText = headerInfo.bookingNum;
+	allInfos[1].innerText = headerInfo.bookingNumToCome;
+	allInfos[2].innerText = diffDateYear;
+	allInfos[3].innerText = cotisation ? "À jour" : "Non payée";
+	if (cotisation) allInfos[3].classList.add("ok");
+}
+
 function applyUserToDom(user) {
 	const nameEl = document.getElementById("profile-name");
 	const avatarEl = document.getElementById("profile-avatar");
@@ -45,6 +64,7 @@ function applyUserToDom(user) {
 	}
 
 	applyRoleVisibility(user.role, user.email);
+	updateUserHeader(user.id, user.cotisationPayed);
 
 	document.querySelectorAll(".info-row").forEach((row) => {
 		const label = row.querySelector(".k")?.textContent.trim();
@@ -55,7 +75,7 @@ function applyUserToDom(user) {
 		if (label === "Nom" && user.nom) value.textContent = user.nom.toUpperCase();
 		if (label === "Téléphone" && user.phone) value.textContent = formatPhone(user.phone);
 		if (label === "N° de licence FFT" && user.licence) value.textContent = user.licence;
-		if (label === "Cotisation 2025-2026" && user.cotisationPayed) value.textContent = user.cotisationPayed === "true" ? "À jour" : "Non payée";
+		if (label === "Cotisation 2025-2026") value.textContent = user.cotisationPayed ? "À jour" : "Non payée";
 	});
 }
 
@@ -64,25 +84,6 @@ function formatPhone(raw) {
 	const printedPhoneNumber =  phoneNumber.match(/.{1,2}/g).join("-");
 	return printedPhoneNumber;
 }
-
-const ROLE_LABELS = {
-	VISITER: "Visiteur",
-	ATTENTE_MEMBER: "En Attente",
-	MEMBER: "Licencié",
-	ADMIN: "Administrateur",
-};
-const TABLE_BADGE_CLASSES = {
-	VISITER: "badge-visiteur",
-	ATTENTE_MEMBER: "badge-attente",
-	MEMBER: "badge-member",
-	ADMIN: "badge-admin",
-};
-const ROLE_BADGE_CLASSES = {
-	VISITER: "role-badge-visiteur",
-	ATTENTE_MEMBER: "role-badge-visiteur",
-	MEMBER: "role-badge-membre",
-	ADMIN: "role-badge-admin",
-};
 
 function applyRoleVisibility(rawRole, rawEmail) {
 	const role = (rawRole || "VISITER").toUpperCase();
@@ -396,6 +397,25 @@ function openModifyModal(personalInfoDiv) {
         }
 	};
 }
+
+const ROLE_LABELS = {
+	VISITER: "Visiteur",
+	ATTENTE_MEMBER: "En Attente",
+	MEMBER: "Licencié",
+	ADMIN: "Administrateur",
+};
+const TABLE_BADGE_CLASSES = {
+	VISITER: "badge-visiteur",
+	ATTENTE_MEMBER: "badge-attente",
+	MEMBER: "badge-member",
+	ADMIN: "badge-admin",
+};
+const ROLE_BADGE_CLASSES = {
+	VISITER: "role-badge-visiteur",
+	ATTENTE_MEMBER: "role-badge-visiteur",
+	MEMBER: "role-badge-membre",
+	ADMIN: "role-badge-admin",
+};
 
 const cancelBookingModal = document.getElementById("cancel-booking-modal-overlay");
 const personalInfoDiv = document.getElementById("personal-info");

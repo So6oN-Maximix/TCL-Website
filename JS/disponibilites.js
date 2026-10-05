@@ -107,11 +107,39 @@ function addBlockToList(indispo, selector) {
     selector.appendChild(globalDiv);
 }
 
+function showModalStatus(formElement, message, type) {
+    const statusEl = formElement.querySelector(".modal-status");
+    if (!statusEl) return;
+
+    statusEl.textContent = message;
+    
+    if (type === "error") {
+        statusEl.className = "modal-status error";
+        statusEl.hidden = false;
+    } else if (type === "success") {
+        statusEl.className = "modal-status success";
+        statusEl.hidden = false;
+    } else {
+        statusEl.hidden = true;
+    }
+}
+
 const hoursParent = document.getElementById("admin-slot-grid");
+
 const disponibilityModal = document.getElementById("block-modal-overlay");
 const blockHoursForm = document.getElementById("block-form");
 const unlockModal = document.getElementById("unblock-modal-overlay");
 const blockList = document.getElementById("dispo-list");
+const unblockHoursForm = document.getElementById("unblock-form");
+
+const recuringModalBtn = document.getElementById("open-recurring-modal");
+const recuringModal = document.getElementById("recurring-modal-overlay");
+const recuringForm = document.getElementById("recurring-form");
+
+const dayPills = document.querySelectorAll(".weekday-pill");
+const radioOptions = document.querySelectorAll('input[name="recurrenceEnd"]');
+const dateLimit = document.getElementById("recurring-end-date");
+const occurences = document.getElementById("recurring-occurrences");
 
 hoursParent.addEventListener("click", event => {
     if (event.target.classList.contains("slot-blockable")) openDisponobilityModal(event.target);
@@ -178,4 +206,111 @@ blockHoursForm.addEventListener("submit", async event => {
     });
     renderGrid();
     loadBlockList();
+});
+
+unblockHoursForm.addEventListener("submit", async event => {
+    event.preventDefault();
+});
+
+recuringModalBtn.addEventListener("click", () => {
+    recuringModal.hidden = false;
+    document.body.style.overflow = "hidden";
+});
+
+recuringModal.addEventListener("click", event => {
+    if (event.target.classList.contains("modal-overlay") || event.target.classList.contains("modal-close") || event.target.id === "recurring-modal-cancel") {
+        recuringModal.hidden = true;
+        document.body.style.overflow = "";
+    }
+});
+
+dayPills.forEach(pill => {
+    pill.onclick = () => {
+        if (pill.classList.contains("selected")) pill.classList.remove("selected");
+        else pill.classList.add("selected");
+    }
+});
+
+radioOptions.forEach(option => {
+    option.addEventListener("change", event => {
+        if (event.target.value === "on-date") {
+            dateLimit.disabled = false;
+            occurences.disabled = true;
+        } else if (event.target.value === "after-count") {
+            dateLimit.disabled = true;
+            occurences.disabled = false;
+        }
+    });
+});
+
+recuringForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    showModalStatus(recuringForm, "", "none");
+
+	const dataForm = Object.fromEntries(new FormData(recuringForm));
+    const selectedPills = document.querySelectorAll(".weekday-pill.selected");
+    const joursSelectionnes = Array.from(selectedPills).map(pill => pill.dataset.day);
+    dataForm.jours = joursSelectionnes;
+
+    if (joursSelectionnes.length === 0) {
+        showModalStatus(recuringForm, "Veuillez sélectionner au moins un jour de la semaine.", "error");
+        return;
+    }
+    if (parseInt(dataForm.heureDebut) >= parseInt(dataForm.heureFin)) {
+        showModalStatus(recuringForm, "L'heure de fin doit être postérieure à l'heure de début.", "error");
+        return;
+    }
+    if (!dataForm.occurrences && !dataForm.dateFin) {
+        showModalStatus(recuringForm, "Veuillez sélectionner la date de fin ou une occurence", "error");
+        return;
+    }
+    
+    try {
+        const postRecuringBlock = await fetch("/api/reserveCourt/recuringBlock", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dataForm)
+        });
+        const recuringBlockList = await postRecuringBlock.json();
+
+        if (!postRecuringBlock.ok) {
+            alert("Impossible de bloquer ces créneaux.");
+            return;
+        }
+
+        const targetCourtSelect = document.getElementById("recurring-court");
+        const courtText = targetCourtSelect.options[targetCourtSelect.selectedIndex].text.split(" · ");
+
+        if (recuringBlockList.toPushToPrisma) {
+            recuringBlockList.toPushToPrisma.forEach(block => {
+                allIndisponibilites.push({
+                    courtId: block.courtId,
+                    date: block.date,
+                    heureDebut: block.heureDebut,
+                    raison: block.raison,
+                    court: {
+                        nom: courtText[0],
+                        type: courtText[1]
+                    }
+                });
+            });
+
+            allIndisponibilites.sort((a, b) => {
+                const dateA = new Date(a.date).getTime();
+                const dateB = new Date(b.date).getTime();
+
+                if (dateA !== dateB) return dateA - dateB;
+                return a.heureDebut - b.heureDebut;
+            });
+
+            renderGrid();
+            loadBlockList();
+        }
+
+        recuringForm.reset();
+        recuringModal.hidden = true;
+        document.body.style.overflow = "";
+    } catch (error) {
+        showModalStatus(recuringForm, error, "error");
+    }
 });

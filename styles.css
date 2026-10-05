@@ -237,6 +237,35 @@ section { padding: 80px 0; }
 .swatch-unavailable {
 	background: repeating-linear-gradient(45deg, #EFEBDD, #EFEBDD 4px, #DAD2B8 4px, #DAD2B8 8px);
 }
+
+.week-nav {
+	display: flex; align-items: center; justify-content: space-between;
+	max-width: 420px; margin-bottom: 14px;
+}
+.week-nav-btn {
+	width: 32px; height: 32px; border-radius: 50%; border: 1px solid #DAD2B8;
+	background: var(--chalk); color: var(--ink); font-size: 16px; line-height: 1;
+	cursor: pointer; display: flex; align-items: center; justify-content: center;
+	font-family: inherit;
+}
+.week-nav-btn:hover { border-color: var(--clay); color: var(--clay); }
+.week-nav-label {
+	font-family: "Oswald", sans-serif; font-size: 14px; font-weight: 600;
+	text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft);
+}
+
+.date-pill.past {
+    color: #B0A98D;
+    background: transparent;
+    border-color: #EFEBDD;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.date-pill.past:hover {
+    border-color: #EFEBDD;
+    color: #B0A98D;
+}
  
 /* Créneau bloqué par le club (entretien, cours, tournoi...) — distinct
    d'un créneau simplement réservé par un membre (.slot.taken existant) */
@@ -322,7 +351,7 @@ section { padding: 80px 0; }
 .profile-stat .num {
 	font-family: "Oswald", sans-serif; font-size: 26px; font-weight: 600; color: var(--clay);
 }
-.profile-stat .num.ok { font-size: 17px; color: var(--court-green); }
+.profile-stat .num.ok { color: var(--court-green); }
 .profile-stat .label {
 	font-size: 12px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px;
 }
@@ -683,6 +712,69 @@ footer ul { list-style: none; }
  
 .tournament-action .btn-outline[disabled] {
 	opacity: 0.5; cursor: not-allowed;
+}
+
+/* MODAL INDISPOS RECURRENTES */
+
+.modal-wide {
+	max-width: 520px;
+	max-height: 88vh;
+	overflow-y: auto;
+}
+
+.dispo-actions-row { margin-bottom: 16px; }
+
+.form-group-cols {
+	display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+
+/* Espacements resserrés à l'intérieur de cette modale précisément,
+   pour qu'elle tienne sans scroll sur la plupart des écrans PC */
+#recurring-form .form-group { margin-bottom: 14px; }
+#recurring-modal-title { font-size: 16px; }
+
+/* Pastilles de jours de la semaine, façon agenda */
+.weekday-picker {
+	display: flex; gap: 6px;
+}
+.weekday-pill {
+	width: 32px; height: 32px; border-radius: 50%; border: 1px solid #DAD2B8;
+	background: var(--chalk); color: var(--ink-soft); font-family: inherit; font-weight: 600;
+	font-size: 12px; cursor: pointer; flex-shrink: 0;
+}
+.weekday-pill:hover { border-color: var(--clay); }
+.weekday-pill.selected {
+	background: var(--court-green); border-color: var(--court-green); color: var(--chalk);
+}
+
+/* Options "Se termine" */
+.recurrence-end-options {
+	display: flex; flex-direction: column; gap: 8px; margin-top: 4px;
+}
+.radio-line {
+	display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink);
+	font-weight: 400;
+}
+/* Force une apparence visible, indépendamment d'un éventuel reset global
+   qui neutraliserait le style natif des radios (appearance: none ailleurs) */
+.radio-line input[type="radio"] {
+	appearance: auto;
+	-webkit-appearance: radio;
+	width: 15px; height: 15px; margin: 0; flex-shrink: 0;
+	accent-color: var(--clay);
+	border: 1px solid #DAD2B8;
+}
+.inline-date, .inline-number {
+	padding: 5px 8px; border: 1px solid #DAD2B8; background: var(--chalk);
+	font-family: inherit; font-size: 13px; color: var(--ink);
+}
+.inline-date:disabled, .inline-number:disabled { opacity: 0.4; cursor: not-allowed; }
+.inline-number { width: 56px; }
+
+@media (max-width: 560px) {
+	.form-group-cols { grid-template-columns: 1fr; }
+	.weekday-picker { flex-wrap: wrap; }
+	.week-nav { max-width: 100%; }
 }
 
 @media (max-width: 780px) {

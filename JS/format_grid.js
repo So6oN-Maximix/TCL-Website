@@ -1,22 +1,50 @@
-function loadDates() {
-    const todayDate = new Date(Date.now());
+function loadDates(mondayDate, todayDate) {
     const dateOptions = {weekday: "long", day: "numeric", month: "long"};
-    datePicker.innerHTML = "";
     for (let i = 0; i < 7; i++) {
-        const formatedDate = new Date(todayDate);
+        const formatedDate = new Date(mondayDate);
         formatedDate.setDate(formatedDate.getDate() + i);
         const formatedLongDate = formatedDate.toLocaleDateString("fr-FR", dateOptions);
         const splitLongDate = formatedLongDate.split(" ");
 
         const globalDiv = document.createElement("div");
         globalDiv.classList.add("date-pill");
-        if (i === 0) globalDiv.classList.add("selected");
+        if (formatedDate.getDay() === (todayDate.getDay())) globalDiv.classList.add("selected");
+        else if (formatedDate < todayDate) globalDiv.classList.add("past");
 
         globalDiv.setAttribute("data-date", formatDate(formatedDate));
         globalDiv.innerHTML = `<span class="d">${splitLongDate[0].charAt(0).toUpperCase() + splitLongDate[0].slice(1, 3)} ${splitLongDate[1]}</span>${splitLongDate[2].slice(0, 4)}.`;
 
         datePicker.appendChild(globalDiv);
     }
+}
+
+function loadWeek(mondayDate) {
+    const weekHeader = document.getElementById("week-nav-label");
+    const startWeekDate = new Date(mondayDate);
+    const endWeekDate = new Date(startWeekDate);
+    endWeekDate.setDate(mondayDate.getDate() + 6);
+    const optionsMois = { month: "long" };
+    const moisDebut = startWeekDate.toLocaleDateString("fr-FR", optionsMois);
+    const moisFin = endWeekDate.toLocaleDateString("fr-FR", optionsMois);
+
+    if (startWeekDate.getFullYear() !== endWeekDate.getFullYear()) weekHeader.textContent = `${startWeekDate.getDate()} ${moisDebut} ${startWeekDate.getFullYear()} – ${endWeekDate.getDate()} ${moisFin} ${endWeekDate.getFullYear()}`;
+    else if (moisDebut !== moisFin) weekHeader.textContent = `${startWeekDate.getDate()} ${moisDebut} – ${endWeekDate.getDate()} ${moisFin} ${startWeekDate.getFullYear()}`;
+    else weekHeader.textContent = `${startWeekDate.getDate()} – ${endWeekDate.getDate()} ${moisDebut} ${startWeekDate.getFullYear()}`;
+}
+
+function updateWeekUI(today) {
+    let todayDate = new Date(today);
+    const lastMonday = new Date(todayDate);
+    while (lastMonday.getDay() !== 6) lastMonday.setDate(lastMonday.getDate() - 1);
+
+    const realTodayDate = new Date(Date.now());
+    const endWeekDate = new Date(lastMonday);
+    endWeekDate.setDate(endWeekDate.getDate() + 6);
+    if (realTodayDate >= lastMonday && realTodayDate <= endWeekDate) todayDate = new Date(realTodayDate);
+
+    datePicker.innerHTML = "";
+    loadWeek(lastMonday);
+    loadDates(lastMonday, todayDate);
 }
 
 function formatDate(date) {
@@ -77,6 +105,8 @@ function getSlotStates({ courtId, date, bookings, indisponibilites }) {
 
 const HOURS = [9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21];
 
+const previousWeekBtn = document.getElementById("prev-week-btn");
+const newtWeekBtn = document.getElementById("next-week-btn");
 const datePicker = document.querySelector(".date-picker");
 const courtPicker = document.querySelector(".booking-panel");
 
@@ -84,7 +114,7 @@ let allIndisponibilites = [];
 let allBookings = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
-    loadDates();
+    updateWeekUI(new Date(Date.now()));
     allIndisponibilites = await getIndisponibilite();
     allBookings = await getBookings();
     renderGrid();
@@ -93,12 +123,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 datePicker.addEventListener("click", event => {
     if (event.target.classList.contains("date-pill")) {
+        if (event.target.classList.contains("past")) return;
         datePicker.querySelector(".selected").classList.remove("selected");
         event.target.classList.add("selected");
         renderGrid();
         loadBlockList();
     }
     if (event.target.classList.contains("d")) {
+        if (event.target.parentElement.classList.contains("past")) return;
         datePicker.querySelector(".selected").classList.remove("selected");
         event.target.parentElement.classList.add("selected");
         renderGrid();
@@ -113,4 +145,17 @@ courtPicker.addEventListener("click", event => {
         renderGrid();
         loadBlockList();
     }
+});
+
+newtWeekBtn.addEventListener("click", () => {
+    const currentMonday = document.querySelectorAll(".date-pill")[0];
+    const nextMondayDate = new Date(currentMonday.getAttribute("data-date"));
+    nextMondayDate.setDate(nextMondayDate.getDate() + 7);
+    updateWeekUI(nextMondayDate);
+});
+previousWeekBtn.addEventListener("click", () => {
+    const currentMonday = document.querySelectorAll(".date-pill")[0];
+    const nextMondayDate = new Date(currentMonday.getAttribute("data-date"));
+    nextMondayDate.setDate(nextMondayDate.getDate() - 7);
+    updateWeekUI(nextMondayDate);
 });

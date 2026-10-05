@@ -19,8 +19,8 @@ router.get("/role", async (req, res) => {
 		});
 
 		res.json(users);
-	} catch (err) {
-		console.error(err);
+	} catch (error) {
+		console.error(error);
 		res.status(500).json({ error: 'Erreur serveur' });
 	}
 });
@@ -49,8 +49,8 @@ router.get("/all", async (req, res) => {
 		});
 
 		res.json(users);
-	} catch (err) {
-		console.error(err);
+	} catch (error) {
+		console.error(error);
 		res.status(500).json({ error: 'Erreur serveur' });
 	}
 });
@@ -70,7 +70,7 @@ router.post("/add", async (req, res) => {
 		const user = await prisma.user.create({ data: { prenom, nom, email, password: hashedPassword, sexe, role, poste, cotisationPayed: cotisation } });
 		res.status(200).json({ message: "User successfully added", user });
 	} catch (error) {
-		console.error(err);
+		console.error(error);
 		res.status(500).json({ error: 'Erreur serveur' });
 	}
 });
@@ -85,7 +85,7 @@ router.post("/save", async (req, res) => {
 
 		res.status(200).json({ message: "User successfully saved", updatedUser });
 	} catch (error) {
-		console.error(err);
+		console.error(error);
 		res.status(500).json({ error: 'Erreur serveur' });
 	}
 });
@@ -99,7 +99,34 @@ router.post("/modify", async (req, res) => {
 		});
 		res.status(200).json({ message: "User successfully updated", updatedUser });
 	} catch (error) {
-		console.error(err);
+		console.error(error);
+		res.status(500).json({ error: 'Erreur serveur' });
+	}
+});
+
+router.get("/header", async (req, res) => {
+	try {
+		const { userId } = req.query;
+		const bookingNum = await prisma.booking.count({
+			where: {userId: parseInt(userId)}
+		});
+		const bookingNumToCome = await prisma.booking.count({
+			where: {
+				userId: parseInt(userId),
+				date: { gte: new Date(Date.now())}
+			}
+		});
+		const licenceYear = await prisma.user.findUnique({
+			select: {memberSince: true},
+			where: {id: parseInt(userId)}
+		});
+		res.json({
+			bookingNum: bookingNum,
+			bookingNumToCome: bookingNumToCome,
+			licenceYear: licenceYear.memberSince
+		});
+	} catch (error) {
+		console.error(error);
 		res.status(500).json({ error: 'Erreur serveur' });
 	}
 });

@@ -29,7 +29,6 @@
 				<a href="/">Accueil</a>
 				<a href="#">École de tennis</a>
 				<a href="/actualites">Actualités</a>
-				<a href="/tournois">Tournois</a>
 				<a href="/equipe">Equipe</a>
 				<a href="/contact">Contact</a>
 			</div>
@@ -79,6 +78,11 @@
 
 		<div>
 			<h3 style="margin-bottom: 16px;">Date</h3>
+			<div class="week-nav">
+				<button type="button" class="week-nav-btn" id="prev-week-btn" aria-label="Semaine précédente">&larr;</button>
+				<span class="week-nav-label" id="week-nav-label">20 – 26 juillet 2026</span>
+				<button type="button" class="week-nav-btn" id="next-week-btn" aria-label="Semaine suivante">&rarr;</button>
+			</div>
 			<div class="date-picker">
 				<div class="date-pill selected" data-date="2026-07-20"><span class="d">Lun 20</span>juil.</div>
 				<div class="date-pill" data-date="2026-07-21"><span class="d">Mar 21</span>juil.</div>
@@ -98,18 +102,18 @@
 			</div>
 
 			<div class="slot-grid" id="admin-slot-grid">
-				<div class="slot slot-blockable" data-heure="16">9h – 10h</button>
-				<div class="slot slot-blockable" data-heure="10">10h – 11h</button>
-				<div class="slot slot-blockable" data-heure="11">11h – 12h</button>
-				<div class="slot slot-blockable" data-heure="19">12h – 13h</button>
-				<div class="slot slot-blockable" data-heure="14">14h – 15h</button>
-				<div class="slot slot-blockable" data-heure="15">15h – 16h</button>
-				<div class="slot slot-blockable" data-heure="16">16h – 17h</button>
-				<div class="slot slot-blockable" data-heure="16">17h – 18h</button>
-				<div class="slot slot-blockable" data-heure="19">18h – 19h</button>
-				<div class="slot slot-blockable" data-heure="19">19h – 20h</button>
-				<div class="slot slot-blockable" data-heure="16">20h – 21h</button>
-				<div class="slot slot-blockable" data-heure="21">21h – 22h</button>
+				<div class="slot slot-blockable" data-heure="9">9h – 10h</div>
+				<div class="slot slot-blockable" data-heure="10">10h – 11h</div>
+				<div class="slot slot-blockable" data-heure="11">11h – 12h</div>
+				<div class="slot slot-blockable" data-heure="12">12h – 13h</div>
+				<div class="slot slot-blockable" data-heure="14">14h – 15h</div>
+				<div class="slot slot-blockable" data-heure="15">15h – 16h</div>
+				<div class="slot slot-blockable" data-heure="16">16h – 17h</div>
+				<div class="slot slot-blockable" data-heure="17">17h – 18h</div>
+				<div class="slot slot-blockable" data-heure="18">18h – 19h</div>
+				<div class="slot slot-blockable" data-heure="19">19h – 20h</div>
+				<div class="slot slot-blockable" data-heure="20">20h – 21h</div>
+				<div class="slot slot-blockable" data-heure="21">21h – 22h</div>
 			</div>
 		</div>
 	</div>
@@ -169,11 +173,121 @@
     </div>
 </div>
 
+<!-- Modale d'ajout d'une indisponibilité récurrente -->
+<div class="modal-overlay" id="recurring-modal-overlay" hidden>
+	<div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="recurring-modal-title">
+		<div class="modal-head">
+			<h3 id="recurring-modal-title">Bloquer un créneau récurrent</h3>
+			<button type="button" class="modal-close" id="recurring-modal-close" aria-label="Fermer">&times;</button>
+		</div>
+
+		<form id="recurring-form">
+			<div class="form-group">
+				<label for="recurring-court">Court</label>
+				<select id="recurring-court" name="court" required>
+					<option value="1">Court 1 · Extérieur</option>
+					<option value="2">Court 2 · Couvert</option>
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="recurring-raison">Raison</label>
+				<input type="text" id="recurring-raison" name="raison" placeholder="Ex: Cours collectif du mardi" required>
+			</div>
+
+			<div class="form-group-cols">
+				<div class="form-group">
+					<label for="recurring-heure-debut">Heure de début</label>
+					<select id="recurring-heure-debut" name="heureDebut" required>
+						<option value="9">9h00</option>
+						<option value="10">10h00</option>
+						<option value="11">11h00</option>
+						<option value="12">12h00</option>
+						<option value="14" selected>14h00</option>
+						<option value="15">15h00</option>
+						<option value="16">16h00</option>
+						<option value="17">17h00</option>
+						<option value="18">18h00</option>
+						<option value="19">19h00</option>
+						<option value="20">20h00</option>
+						<option value="21">21h00</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="recurring-heure-fin">Heure de fin</label>
+					<select id="recurring-heure-fin" name="heureFin" required>
+						<option value="10">10h00</option>
+						<option value="11">11h00</option>
+						<option value="12">12h00</option>
+						<option value="13">13h00</option>
+						<option value="15" selected>15h00</option>
+						<option value="16">16h00</option>
+						<option value="17">17h00</option>
+						<option value="18">18h00</option>
+						<option value="19">19h00</option>
+						<option value="20">20h00</option>
+						<option value="21">21h00</option>
+						<option value="22">22h00</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label>Se répète chaque</label>
+				<div class="weekday-picker" id="weekday-picker">
+					<button type="button" class="weekday-pill" data-day="1">L</button>
+					<button type="button" class="weekday-pill" data-day="2">M</button>
+					<button type="button" class="weekday-pill" data-day="3">M</button>
+					<button type="button" class="weekday-pill" data-day="4">J</button>
+					<button type="button" class="weekday-pill" data-day="5">V</button>
+					<button type="button" class="weekday-pill" data-day="6">S</button>
+					<button type="button" class="weekday-pill" data-day="0">D</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="recurring-start-date">À partir du</label>
+				<input type="date" id="recurring-start-date" name="startDate" required>
+			</div>
+
+			<div class="form-group">
+				<label>Se termine</label>
+				<div class="recurrence-end-options">
+					<label class="radio-line">
+						<input type="radio" name="recurrenceEnd" value="on-date" checked>
+						Le
+						<input type="date" id="recurring-end-date" name="dateFin" class="inline-date">
+					</label>
+					<label class="radio-line">
+						<input type="radio" name="recurrenceEnd" value="after-count">
+						Dans
+						<input type="number" id="recurring-occurrences" name="occurrences" class="inline-number" min="1" max="52" value="1" disabled>
+						semaines
+					</label>
+				</div>
+			</div>
+
+			<p class="modal-note">Un créneau d'indisponibilité distinct sera créé pour chaque date correspondante. <br> Vous pourrez les débloquer individuellement depuis la liste ci-dessous.</p>
+			<p class="modal-status" id="recurring-status" hidden></p>
+
+			<div class="modal-actions">
+				<button type="submit" class="btn-primary">Créer les indisponibilités</button>
+				<button type="button" class="btn-outline btn-small" id="recurring-modal-cancel">Annuler</button>
+			</div>
+		</form>
+	</div>
+</div>
+
 <section class="section-tinted" id="upcoming-section">
 	<div class="wrap">
-		<div class="block-head">
-			<h3>Indisponibilités à venir</h3>
-			<span class="block-count">4 créneaux bloqués</span>
+		<div class="block-head" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+            <div>
+			    <h3 style="margin-bottom: 4px;">Indisponibilités à venir</h3>
+			    <span class="block-count">4 créneaux bloqués</span>
+            </div>
+            <div class="dispo-actions-row">
+                <button type="button" class="btn-outline btn-small" id="open-recurring-modal">+ Bloquer un créneau récurrent</button>
+            </div>
 		</div>
 
 		<div class="admin-table-wrap">
@@ -202,7 +316,6 @@
 			<ul>
 				<li><a href="#">École de tennis</a></li>
 				<li><a href="#">Nos équipes</a></li>
-				<li><a href="#">Tournois</a></li>
 			</ul>
 		</div>
 		<div>
