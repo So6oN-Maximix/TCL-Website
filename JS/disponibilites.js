@@ -9,18 +9,25 @@ function openDisponobilityModal(targetElement) {
 
 function openUnlockModal(targetElement) {
     const activeCourt = document.querySelector(".court-option.selected");
-    unlockModal.querySelector("#unblock-info-court").innerText = `${activeCourt.querySelector(".name").innerText} · ${activeCourt.querySelector(".type").innerText}`;
-    unlockModal.querySelector("#unblock-info-date").innerText = formatLongDate(targetElement.querySelector(".date-pill.selected"));
-    unlockModal.querySelector("#unblock-info-heure").innerText = `${parseInt(targetElement.getAttribute("data-heure"))}h - ${parseInt(targetElement.getAttribute("data-heure")) + 1}h`;
-    unlockModal.querySelector("#unblock-info-raison").innerText = targetElement.querySelector(".slot-reason").innerText;
-    unlockModal.hidden = false;
+    const allIndisponibilitesList = Array.from(document.querySelectorAll(".dispo-table-row"));
+    const targetLine = allIndisponibilitesList.find(item => {
+        const courtId = item.querySelector(".block-court");
+        const date = item.querySelector(".block-date");
+        const startHour = item.querySelector(".block-hours");
+        return courtId.getAttribute("data-court") === activeCourt.getAttribute("data-court-id") && date.getAttribute("data-date") === document.querySelector(".date-pill.selected").getAttribute("data-date") && startHour.getAttribute("data-heure") === targetElement.getAttribute("data-heure");
+    });
+    openUnlockModalViaList(targetLine);
 }
 
 function openUnlockModalViaList(targetElement) {
     unlockModal.querySelector("#unblock-info-court").innerText = targetElement.querySelector(".block-court").innerText;
+    unlockModal.querySelector("#unblock-info-court").setAttribute("data-court", targetElement.querySelector(".block-court").getAttribute("data-court"));
     unlockModal.querySelector("#unblock-info-date").innerText = targetElement.querySelector(".block-date").innerText;
+    unlockModal.querySelector("#unblock-info-date").setAttribute("data-date", targetElement.querySelector(".block-date").getAttribute("data-date"));
     unlockModal.querySelector("#unblock-info-heure").innerText = targetElement.querySelector(".block-hours").innerText;
+    unlockModal.querySelector("#unblock-info-heure").setAttribute("data-heure", targetElement.querySelector(".block-hours").getAttribute("data-heure"));
     unlockModal.querySelector("#unblock-info-raison").innerText = targetElement.querySelector(".block-reason").innerText;
+    unlockModal.querySelector("#unblock-info-raison").setAttribute("data-raison", targetElement.querySelector(".block-reason").getAttribute("data-raison"));
     unlockModal.hidden = false;
 }
 
@@ -71,24 +78,28 @@ function loadBlockList() {
 function addBlockToList(indispo, selector) {
     const globalDiv = document.createElement("div");
     globalDiv.classList.add("dispo-table-row");
-    globalDiv.setAttribute("data-id", indispo.heureDebut);
 
     const spanCourt = document.createElement("span");
     spanCourt.classList.add("block-court");
     const lowerCourtType = indispo.court.type.toLowerCase();
     spanCourt.innerText = `${indispo.court.nom} · ${lowerCourtType.charAt(0).toUpperCase() + lowerCourtType.slice(1)}`;
+    spanCourt.setAttribute("data-court", indispo.courtId);
+    spanCourt.setAttribute("data-type", lowerCourtType);
 
     const spanDate = document.createElement("span");
     spanDate.classList.add("block-date");
-    spanDate.innerText = formatLongDate(indispo.date);
+    spanDate.innerText = formatLongDate(indispo.dateDebut);
+    spanDate.setAttribute("data-date", formatDate(new Date(indispo.dateDebut)));
     
     const spanHours = document.createElement("span");
     spanHours.classList.add("block-hours");
-    spanHours.innerText = `${parseInt(indispo.heureDebut)}h - ${parseInt(indispo.heureDebut) + 1}h`;
+    spanHours.innerText = `${new Date(indispo.dateDebut).getHours()}h - ${new Date(indispo.dateDebut).getHours() + 1}h`;
+    spanHours.setAttribute("data-heure", new Date(indispo.dateDebut).getHours());
     
     const spanReason = document.createElement("span");
     spanReason.classList.add("block-reason");
     spanReason.innerText = indispo.raison;
+    spanReason.setAttribute("data-raison", indispo.raison);
 
     const spanAdmin = document.createElement("span");
     spanAdmin.classList.add("admin-actions");
@@ -113,15 +124,8 @@ function showModalStatus(formElement, message, type) {
 
     statusEl.textContent = message;
     
-    if (type === "error") {
-        statusEl.className = "modal-status error";
-        statusEl.hidden = false;
-    } else if (type === "success") {
-        statusEl.className = "modal-status success";
-        statusEl.hidden = false;
-    } else {
-        statusEl.hidden = true;
-    }
+    if (type === "error" || type === "success") statusEl.className = `modal-status ${type}`;
+    statusEl.hidden = type === "error" || type === "success";
 }
 
 const hoursParent = document.getElementById("admin-slot-grid");
@@ -166,13 +170,14 @@ blockHoursForm.addEventListener("submit", async event => {
     const targetCourt = disponibilityModal.querySelector("#block-form-court-label").innerText.split(" · ");
     const date = document.querySelector(".date-pill.selected").getAttribute("data-date");
     const targetHours = disponibilityModal.querySelector("#block-form-slot-label").getAttribute("data-heure");
+    const startDate = new Date(date);
+    startDate.setHours(parseInt(targetHours), 0, 0, 0);
     blockHoursForm.reset();
     disponibilityModal.hidden = true;
 
     const infos = {
         courtId: parseInt(targetCourtId),
-        date: date,
-        heureDebut: parseInt(targetHours),
+        dateDebut: startDate,
         raison: dataForm.raison
     };
 
@@ -189,27 +194,48 @@ blockHoursForm.addEventListener("submit", async event => {
 
     allIndisponibilites.push({
         courtId: infos.courtId,
-        date: infos.date,
-        heureDebut: infos.heureDebut,
+        dateDebut: infos.dateDebut,
         raison: infos.raison,
         court: {
             nom: targetCourt[0],
             type: targetCourt[1]
         }
     });
-    allIndisponibilites.sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
-
-        if (dateA !== dateB) return dateA - dateB;
-        return a.heureDebut - b.heureDebut;
-    });
+    allIndisponibilites.sort((a, b) => new Date(a.dateDebut).getTime() - new Date(b.dateDebut).getTime());
     renderGrid();
     loadBlockList();
 });
 
 unblockHoursForm.addEventListener("submit", async event => {
     event.preventDefault();
+    const courtId = unlockModal.querySelector("#unblock-info-court").getAttribute("data-court");
+    const date = unlockModal.querySelector("#unblock-info-date").getAttribute("data-date");
+    const startHour = unlockModal.querySelector("#unblock-info-heure").getAttribute("data-heure");
+    const startDate = new Date(date);
+    startDate.setHours(parseInt(startHour), 0, 0, 0);
+
+    try {
+        const deleteBlock = await fetch("/api/reserveCourt/deleteBlock", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ courtId, startDate })
+        });
+
+        if (!deleteBlock.ok) {
+            showModalStatus(unblockHoursForm, "Impossible de débloquer ce créneau.", "error");
+            return;
+        }
+
+        allIndisponibilites = allIndisponibilites.filter(indispo => {
+            const isTarget = indispo.courtId === parseInt(courtId) && indispo.dateDebut === startDate;
+            return !isTarget;
+        });
+        renderGrid();
+        loadBlockList();
+        unlockModal.hidden = true;
+    } catch (error) {
+        showModalStatus(unblockHoursForm, error, "error");
+    }
 });
 
 recuringModalBtn.addEventListener("click", () => {
@@ -285,8 +311,7 @@ recuringForm.addEventListener("submit", async event => {
             recuringBlockList.toPushToPrisma.forEach(block => {
                 allIndisponibilites.push({
                     courtId: block.courtId,
-                    date: block.date,
-                    heureDebut: block.heureDebut,
+                    dateDebut: block.dateDebut,
                     raison: block.raison,
                     court: {
                         nom: courtText[0],
@@ -295,13 +320,7 @@ recuringForm.addEventListener("submit", async event => {
                 });
             });
 
-            allIndisponibilites.sort((a, b) => {
-                const dateA = new Date(a.date).getTime();
-                const dateB = new Date(b.date).getTime();
-
-                if (dateA !== dateB) return dateA - dateB;
-                return a.heureDebut - b.heureDebut;
-            });
+            allIndisponibilites.sort((a, b) => new Date(a.dateDebut).getTime() - new Date(b.dateDebut).getTime());
 
             renderGrid();
             loadBlockList();

@@ -35,13 +35,14 @@ function loadWeek(mondayDate) {
 function updateWeekUI(today) {
     let todayDate = new Date(today);
     const lastMonday = new Date(todayDate);
-    while (lastMonday.getDay() !== 6) lastMonday.setDate(lastMonday.getDate() - 1);
+    while (lastMonday.getDay() !== 1) lastMonday.setDate(lastMonday.getDate() - 1);
 
     const realTodayDate = new Date(Date.now());
     const endWeekDate = new Date(lastMonday);
     endWeekDate.setDate(endWeekDate.getDate() + 6);
     if (realTodayDate >= lastMonday && realTodayDate <= endWeekDate) todayDate = new Date(realTodayDate);
 
+    previousWeekBtn.style.visibility = previousBtnVisibility(lastMonday);
     datePicker.innerHTML = "";
     loadWeek(lastMonday);
     loadDates(lastMonday, todayDate);
@@ -60,9 +61,9 @@ function formatLongDate(date) {
     return dateFormat.toLocaleDateString("fr-FR", dateOptions).split(" ").map(mot => mot.charAt(0).toUpperCase() + mot.slice(1)).join(" ");
 }
 
-async function getIndisponibilite() {
+async function getIndisponibilite(today) {
 	try {
-		const res = await fetch("/api/reserveCourt/indispo", {
+		const res = await fetch(`/api/reserveCourt/indispo?today=${today}`, {
 			method: "GET",
 			headers: { "Content-Type": "application/json" }
 		});
@@ -93,14 +94,22 @@ function getSlotStates({ courtId, date, bookings, indisponibilites }) {
 	return HOURS.map((heure) => {
 		if (isToday && heure <= now.getHours()) return { heure, status: "past" };
 
-		const booking = bookings.find((b) => b.courtId === courtId && b.date.split("T")[0] === date && b.heureDebut === heure);
+        const dateFormat = new Date(date);
+        dateFormat.setUTCHours(heure + dateFormat.getTimezoneOffset() / 60, 0, 0, 0);
+		const booking = bookings.find((b) => b.courtId === courtId && new Date(b.dateDebut).getTime() === dateFormat.getTime());
 		if (booking) return { heure, status: "taken", booking };
 
-		const indispo = indisponibilites.find((i) => i.courtId === courtId && i.date.split("T")[0] === date && i.heureDebut === heure);
+		const indispo = indisponibilites.find((i) => i.courtId === courtId && new Date(i.dateDebut).getTime() === dateFormat.getTime());
 		if (indispo) return { heure, status: "unavailable", indispo };
 
 		return { heure, status: "slot-blockable" };
 	});
+}
+
+function previousBtnVisibility(mondayDate) {
+    const today = new Date(Date.now());
+    const currentMonday = new Date(mondayDate);
+    return today >= currentMonday ? "hidden" : "visible";
 }
 
 const HOURS = [9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21];
@@ -115,7 +124,7 @@ let allBookings = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
     updateWeekUI(new Date(Date.now()));
-    allIndisponibilites = await getIndisponibilite();
+    allIndisponibilites = await getIndisponibilite(new Date(Date.now()));
     allBookings = await getBookings();
     renderGrid();
     loadBlockList();
@@ -138,7 +147,7 @@ datePicker.addEventListener("click", event => {
     }
 });
 
-courtPicker.addEventListener("click", event => {
+courtPicker.addEventListener("click", async event => {
     if (event.target.classList.contains("court-option")) {
         courtPicker.querySelector(".selected").classList.remove("selected");
         event.target.classList.add("selected");
@@ -147,15 +156,21 @@ courtPicker.addEventListener("click", event => {
     }
 });
 
-newtWeekBtn.addEventListener("click", () => {
+newtWeekBtn.addEventListener("click", async () => {
     const currentMonday = document.querySelectorAll(".date-pill")[0];
     const nextMondayDate = new Date(currentMonday.getAttribute("data-date"));
     nextMondayDate.setDate(nextMondayDate.getDate() + 7);
+    allIndisponibilites = await getIndisponibilite(nextMondayDate);
     updateWeekUI(nextMondayDate);
+    renderGrid();
+    loadBlockList();
 });
-previousWeekBtn.addEventListener("click", () => {
+previousWeekBtn.addEventListener("click", async () => {
     const currentMonday = document.querySelectorAll(".date-pill")[0];
     const nextMondayDate = new Date(currentMonday.getAttribute("data-date"));
     nextMondayDate.setDate(nextMondayDate.getDate() - 7);
+    allIndisponibilites = await getIndisponibilite(nextMondayDate);
     updateWeekUI(nextMondayDate);
+    renderGrid();
+    loadBlockList();
 });

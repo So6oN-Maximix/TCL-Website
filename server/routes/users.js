@@ -113,7 +113,7 @@ router.get("/header", async (req, res) => {
 		const bookingNumToCome = await prisma.booking.count({
 			where: {
 				userId: parseInt(userId),
-				date: { gte: new Date(Date.now())}
+				dateDebut: { gte: new Date(Date.now())}
 			}
 		});
 		const licenceYear = await prisma.user.findUnique({

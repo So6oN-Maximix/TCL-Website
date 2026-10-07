@@ -6,8 +6,7 @@ const router = express.Router();
 
 router.post("/block", async (req, res) => {
     try {
-		const { courtId, date, heureDebut, raison } = req.body;
-        const indisponibility = await prisma.indisponibilite.create({ data: { courtId, date: new Date(date), heureDebut: heureDebut, raison } });
+        const indisponibility = await prisma.indisponibilite.create({ data: req.body });
         res.status(200).json({ message: "Indisponibility successfully added", indisponibility });
     } catch (error) {
 		console.error(error);
@@ -17,23 +16,22 @@ router.post("/block", async (req, res) => {
 
 router.get("/indispo", async (req, res) => {
     try {
-        const now = new Date();
-        const currentHour = now.getHours();
+        const today = new Date(req.query.today);
 
-        const today = new Date(now);
-        today.setUTCHours(0, 0, 0, 0);
+        let lastMonday = new Date(today);
+        while (lastMonday.getDay() !== 1) lastMonday.setDate(lastMonday.getDate() - 1);
+        lastMonday.setUTCHours(0, 0, 0, 0);
 
-        const tomorrow = new Date(today);
-        tomorrow.setUTCDate(today.getUTCDate() + 1);
+        const endWeek = new Date(lastMonday);
+        endWeek.setUTCDate(lastMonday.getUTCDate() + 6);
+        endWeek.setUTCHours(23, 59, 59, 999);
 
-        const nextWeek = new Date(today);
-        nextWeek.setUTCDate(today.getUTCDate() + 7);
+        if (today >= lastMonday && today <= endWeek) lastMonday = new Date(today);
 
 		const indisponibilites = await prisma.indisponibilite.findMany({
 			select: {
                 courtId: true,
-                date: true,
-                heureDebut: true,
+                dateDebut: true,
                 raison: true,
                 court: {
                     select: {
@@ -43,23 +41,12 @@ router.get("/indispo", async (req, res) => {
                 }
             },
             where: {
-                OR: [
-                    {
-                        date: today,
-                        heureDebut: { gt: currentHour } 
-                    },
-                    {
-                        date: {
-                            gte: tomorrow,
-                            lte: nextWeek
-                        }
-                    }
-                ]
+                dateDebut: {
+                    gte: lastMonday,
+                    lte: endWeek
+                }
             },
-            orderBy: [
-                { date: "asc" },
-                { heureDebut: "asc" }
-            ]
+            orderBy: { dateDebut: "asc" }
         });
 		res.json(indisponibilites);
     } catch (error) {
@@ -74,8 +61,7 @@ router.get("/bookings", async (req, res) => {
 			select: {
                 courtId: true,
                 userId: true,
-                date: true,
-                heureDebut: true,
+                dateDebut: true,
                 user: {
                     select: {
                         prenom: true,
@@ -164,17 +150,17 @@ router.post("/recuringBlock", async (req, res) => {
             endDate = new Date(currentDate);
             endDate.setDate(currentDate.getDate() + 7 * parseInt(dataForm.occurrences) - 1);
         }
-        endDate.setHours(23, 59, 59, 999);
+        endDate.setUTCHours(23, 59, 59, 999);
 
         const toPushToPrisma = [];
         while (currentDate <= endDate) {
             if (formattedDays.includes(currentDate.getDay())) {
                 const fixedDate = new Date(currentDate);
                 intervalles.forEach(async hour => {
+                    fixedDate.setUTCHours(hour, 0, 0, 0)
                     toPushToPrisma.push({
                         courtId: parseInt(dataForm.court),
-                        date: fixedDate,
-                        heureDebut: hour,
+                        dateDebut: fixedDate,
                         raison: dataForm.raison
                     });
                 });
@@ -183,6 +169,22 @@ router.post("/recuringBlock", async (req, res) => {
         }
         if (toPushToPrisma.length > 0) await prisma.indisponibilite.createMany({ data: toPushToPrisma });
         res.status(200).json({ message: `Recuring block successfully added`, toPushToPrisma });
+    } catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+router.post("/deleteBlock", async (req, res) => {
+    try {
+        const { courtId, startDate } = req.body;
+        const deleteBlock = await prisma.indisponibilite.deleteMany({
+            where: {
+                courtId: parseInt(courtId),
+                dateDebut: new Date(startDate),
+            }
+        });
+        res.status(200).json({ message: `Block successfully deleted`, deleteBlock });
     } catch (error) {
 		console.error(error);
 		res.status(500).json({ error: "Erreur serveur" });

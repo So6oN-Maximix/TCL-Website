@@ -253,6 +253,7 @@ section { padding: 80px 0; }
 	font-family: "Oswald", sans-serif; font-size: 14px; font-weight: 600;
 	text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft);
 }
+.invisible { visibility: hidden; }
 
 .date-pill.past {
     color: #B0A98D;

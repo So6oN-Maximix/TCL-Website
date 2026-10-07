@@ -44,20 +44,18 @@ model Booking {
 	court      Court    @relation(fields: [courtId], references: [id])
 	userId     Int
 	user       User     @relation(fields: [userId], references: [id])
-	date       DateTime @db.Date
-	heureDebut Int
+	dateDebut  DateTime
 	statut     String   @default("confirmee")
 	bookedAt   DateTime @default(now())
 
-	@@unique([courtId, date, heureDebut])
+	@@unique([courtId, dateDebut])
 }
 
 model Indisponibilite {
 	id         Int      @id @default(autoincrement())
 	courtId    Int
 	court      Court    @relation(fields: [courtId], references: [id])
-	date       DateTime @db.Date
-	heureDebut Int
+	dateDebut  DateTime
 	raison     String?
 }
 
