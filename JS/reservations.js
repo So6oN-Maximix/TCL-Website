@@ -93,11 +93,12 @@ confirmBookingBtn.onclick = async () => {
 
 	try {
         const currentUser = JSON.parse(localStorage.getItem("user"));
+        const bookingDate = new Date(document.querySelector(".date-pill.selected").getAttribute("data-date"));
+        bookingDate.setHours(parseInt(document.querySelector(".slot.selected").getAttribute("data-heure")), 0, 0, 0);
         const infos = {
             courtId: parseInt(document.querySelector(".court-option.selected").getAttribute("data-court-id")),
             userId: currentUser.id,
-            date: new Date(document.querySelector(".date-pill.selected").getAttribute("data-date")),
-            heureDebut: parseInt(document.querySelector(".slot.selected").getAttribute("data-heure"))
+            dateDebut: bookingDate
         }
 		const res = await fetch("/api/reserveCourt/booking", {
 			method: "POST",
@@ -124,8 +125,7 @@ confirmBookingBtn.onclick = async () => {
         allBookings.push({
             courtId: infos.courtId,
             userId: infos.userId,
-            date: document.querySelector(".date-pill.selected").getAttribute("data-date") + "T00:00:00.000Z",
-            heureDebut: infos.heureDebut,
+            dateDebut: infos.dateDebut,
             user: {
                 prenom: currentUser.prenom,
                 nom: currentUser.nom

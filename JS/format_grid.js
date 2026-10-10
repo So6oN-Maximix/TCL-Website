@@ -46,6 +46,7 @@ function updateWeekUI(today) {
     datePicker.innerHTML = "";
     loadWeek(lastMonday);
     loadDates(lastMonday, todayDate);
+    datePicker.scrollLeft = 0;
 }
 
 function formatDate(date) {
@@ -95,7 +96,7 @@ function getSlotStates({ courtId, date, bookings, indisponibilites }) {
 		if (isToday && heure <= now.getHours()) return { heure, status: "past" };
 
         const dateFormat = new Date(date);
-        dateFormat.setUTCHours(heure + dateFormat.getTimezoneOffset() / 60, 0, 0, 0);
+        dateFormat.setHours(heure, 0, 0, 0);
 		const booking = bookings.find((b) => b.courtId === courtId && new Date(b.dateDebut).getTime() === dateFormat.getTime());
 		if (booking) return { heure, status: "taken", booking };
 

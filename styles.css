@@ -772,83 +772,102 @@ footer ul { list-style: none; }
 .inline-date:disabled, .inline-number:disabled { opacity: 0.4; cursor: not-allowed; }
 .inline-number { width: 56px; }
 
+/* ---- 860px : bascule du menu en hamburger ---- */
+@media (max-width: 860px) {
+	.nav-toggle { display: flex; }
+	.nav-collapsible {
+		display: none;
+		position: absolute; top: 76px; left: 0; right: 0;
+		background: var(--court-green); border-bottom: 3px solid var(--ball);
+		flex-direction: column; align-items: stretch; gap: 0;
+		padding: 8px 32px 24px; margin-left: 0;
+	}
+	.nav-collapsible.open { display: flex; }
+	.nav-links { flex-direction: column; gap: 0; }
+	.nav-links a { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+	.nav-actions { flex-direction: column; align-items: stretch; gap: 12px; margin-top: 16px; }
+	.btn-reserve, .nav-account { text-align: center; }
+}
+ 
+/* ---- 780px : grilles à colonnes multiples → 1 ou 2 colonnes, tables → cartes ---- */
+@media (max-width: 780px) {
+ 
+	/* Mise en page générale */
+	.hero h1 { font-size: 38px; }
+	.cards { grid-template-columns: 1fr; }
+	.cards.stacked .card { grid-template-columns: 1fr; }
+	.school .wrap { grid-template-columns: 1fr; }
+	.stats .wrap { grid-template-columns: repeat(2, 1fr); row-gap: 20px; }
+	footer .wrap { grid-template-columns: 1fr; }
+	.contact-grid { grid-template-columns: 1fr; }
+	.team-grid { grid-template-columns: 1fr; }
+	.admin-quick-links { grid-template-columns: 1fr; }
+	.auth-card { padding: 24px; }
+ 
+	/* Réservation / disponibilités */
+	.booking { grid-template-columns: 1fr; }
+	.slot-grid { grid-template-columns: repeat(3, 1fr); }
+	.dispo-table-head { display: none; }
+	.dispo-table-row {
+		grid-template-columns: 1fr; gap: 6px; text-align: left; padding: 18px;
+	}
+	.tournament-card { grid-template-columns: 1fr; }
+	.tournament-date-block { flex-direction: row; gap: 10px; width: fit-content; padding: 10px 16px; }
+	.tournament-action { align-items: flex-start; }
+ 
+	/* Profil */
+	.profile-hero-content { flex-direction: column; align-items: flex-start; gap: 16px; }
+	.profile-header { flex-wrap: wrap; }
+	.profile-cta { margin-left: 0; }
+	.profile-stats { grid-template-columns: repeat(2, 1fr); }
+	.profile-grid { grid-template-columns: 1fr; }
+	.security-form-cols { grid-template-columns: 1fr; }
+	.visitor-banner { flex-direction: column; align-items: flex-start; }
+ 
+	/* Administration : membres / équipes */
+	.admin-table-head,
+	.admin-table-head-full,
+	.team-table-head { display: none; }
+	.admin-table-row,
+	.admin-table-row-full,
+	.team-table-row {
+		grid-template-columns: 1fr; gap: 8px; text-align: left; padding: 18px;
+	}
+	.admin-actions,
+	.admin-table-row-full .admin-actions { text-align: left; margin-top: 6px; justify-content: flex-start; }
+	.team-create-form { grid-template-columns: 1fr; }
+}
+ 
+/* ---- 560px : formulaires et modales à plusieurs colonnes ---- */
 @media (max-width: 560px) {
 	.form-group-cols { grid-template-columns: 1fr; }
 	.weekday-picker { flex-wrap: wrap; }
 	.week-nav { max-width: 100%; }
+	.week-nav-label { font-size: 12px; }
+    .week-nav-btn { width: 28px; height: 28px; font-size: 14px; }
+    .date-pill { padding: 8px 10px; font-size: 11px; }
+    .date-pill .d { font-size: 13px; }
 }
-
-@media (max-width: 780px) {
-	.team-grid { grid-template-columns: 1fr; }
-	.admin-table-head-full { display: none; }
-	.admin-table-row-full {
-		grid-template-columns: 1fr; gap: 8px; text-align: left;
-		padding: 18px;
-	}
-	.admin-table-row-full .admin-actions { justify-content: flex-start; }
-	.team-table-head { display: none; }
-	.team-table-row {
-		grid-template-columns: 1fr; gap: 8px; text-align: left; padding: 18px;
-	}
-	.team-create-form { grid-template-columns: 1fr; }
-	.tournament-card { grid-template-columns: 1fr; }
-	.tournament-date-block { flex-direction: row; gap: 10px; width: fit-content; padding: 10px 16px; }
-	.tournament-action { align-items: flex-start; }
-}
-
-@media (max-width: 860px) {
-  .nav-toggle { display: flex; }
-  .nav-collapsible {
-    display: none;
-    position: absolute; top: 76px; left: 0; right: 0;
-    background: var(--court-green); border-bottom: 3px solid var(--ball);
-    flex-direction: column; align-items: stretch; gap: 0;
-    padding: 8px 32px 24px; margin-left: 0;
-  }
-  .nav-collapsible.open { display: flex; }
-  .nav-links { flex-direction: column; gap: 0; }
-  .nav-links a { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-  .nav-actions { flex-direction: column; align-items: stretch; gap: 12px; margin-top: 16px; }
-  .btn-reserve, .nav-account { text-align: center; }
-}
-
-@media (max-width: 780px) {
-  .hero h1 { font-size: 38px; }
-  .stats .wrap { grid-template-columns: repeat(2, 1fr); row-gap: 20px; }
-  .cards { grid-template-columns: 1fr; }
-  .school .wrap { grid-template-columns: 1fr; }
-  footer .wrap { grid-template-columns: 1fr; }
-  .booking { grid-template-columns: 1fr; }
-  .slot-grid { grid-template-columns: repeat(3, 1fr); }
-  .cards.stacked .card { grid-template-columns: 1fr; }
-  .profile-grid { grid-template-columns: 1fr; }
-  .profile-hero-content { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .profile-header { flex-wrap: wrap; }
-  .profile-cta { margin-left: 0; }
-  .profile-stats { grid-template-columns: repeat(2, 1fr); }
-  .security-form-cols { grid-template-columns: 1fr; }
-  .admin-table-head { display: none; }
-  .admin-table-row {
-    grid-template-columns: 1fr; gap: 6px; padding: 16px 18px;
-  }
-  .admin-actions { text-align: left; margin-top: 6px; }
-  .visitor-banner { flex-direction: column; align-items: flex-start; }
-  .auth-card { padding: 24px; }
-  .contact-grid { grid-template-columns: 1fr; }
-  .dispo-table-head { display: none; }
-  .dispo-table-row {
-	grid-template-columns: 1fr; gap: 6px; text-align: left; padding: 18px;
-  }
-}
-
+ 
+/* ---- 480px : petit mobile ---- */
 @media (max-width: 480px) {
-  .wrap { padding: 0 20px; }
-  .hero h1 { font-size: 30px; }
-  .page-hero h1 { font-size: 28px; }
-  .logo { font-size: 17px; }
-  .stats .wrap { padding: 24px 20px; }
-  .hero-ctas { flex-direction: column; align-items: stretch; }
-  .hero-ctas a { text-align: center; }
-  .profile-stats { grid-template-columns: 1fr; }
-  .slot-grid { grid-template-columns: repeat(2, 1fr); }
+	.wrap { padding: 0 20px; }
+	.logo { font-size: 17px; }
+ 
+	.hero h1 { font-size: 30px; }
+	.hero-ctas { flex-direction: column; align-items: stretch; }
+	.hero-ctas a { text-align: center; }
+	.page-hero h1 { font-size: 28px; }
+ 
+	.stats .wrap { padding: 24px 20px; grid-template-columns: 1fr; }
+	.profile-stats { grid-template-columns: 1fr; }
+	.slot-grid { grid-template-columns: repeat(2, 1fr); }
+ 
+	.booking-summary { flex-direction: column; align-items: flex-start; gap: 14px; }
+	.booking-summary .btn-primary { width: 100%; }
+	.booking-panel { padding: 16px; }
+ 
+	.modal-overlay { padding: 14px; }
+	.modal { padding: 20px; }
+	.modal-actions, .form-group-submit { flex-wrap: wrap; }
 }

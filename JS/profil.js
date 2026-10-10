@@ -240,13 +240,7 @@ async function loadBookings() {
 
 	const allBookings = await res.json();
 	const allBookingForUser = allBookings.filter(booking => booking.userId === parseInt(JSON.parse(localStorage.getItem("user")).id));
-    allBookingForUser.sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
-
-        if (dateA !== dateB) return dateA - dateB;
-        return a.heureDebut - b.heureDebut;
-    });
+    allBookingForUser.sort((a, b) => new Date(a.dateDebut).getTime() - new Date(b.dateDebut).getTime());
 
 	const { upcoming, past } = splitBookings(allBookingForUser);
 	const bookingTable = document.querySelectorAll(".info-list");
@@ -270,13 +264,14 @@ function addToBookingList(booking, selector) {
 	courtSpan.innerText = courtInfo;
 	const daySpan = document.createElement("span");
 	daySpan.classList.add("booking-when");
-	const dateString = `${formatLongDate(new Date(booking.date))} · ${parseInt(booking.heureDebut)}h - ${parseInt(booking.heureDebut) + 1}h`
+	const bookingDate = new Date(booking.dateDebut);
+	const dateString = `${formatLongDate(bookingDate)} · ${parseInt(bookingDate.getHours())}h - ${parseInt(bookingDate.getHours()) + 1}h`;
 	daySpan.innerText = dateString;
 	infoDiv.appendChild(courtSpan);
 	infoDiv.appendChild(daySpan);
 
-	const bookingEnd = new Date(booking.date);
-	bookingEnd.setHours(parseInt(booking.heureDebut) + 1, 0, 0, 0);
+	const bookingEnd = new Date(booking.dateDebut);
+	bookingEnd.setHours(parseInt(bookingDate.getHours()) + 1, 0, 0, 0);
 	const isPast = bookingEnd <= new Date();
 
 	globalDiv.appendChild(infoDiv);
@@ -319,8 +314,7 @@ function openCancelModal(courtInfo, dateString, booking) {
                 body: JSON.stringify({
                     courtId: booking.courtId,
 					userId: parseInt(JSON.parse(localStorage.getItem("user")).id),
-                    date: booking.date,
-                    heureDebut: booking.heureDebut
+                    dateDebut: booking.dateDebut
                 })
             });
 

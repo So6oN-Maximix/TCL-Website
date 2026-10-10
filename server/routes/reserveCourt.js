@@ -20,11 +20,11 @@ router.get("/indispo", async (req, res) => {
 
         let lastMonday = new Date(today);
         while (lastMonday.getDay() !== 1) lastMonday.setDate(lastMonday.getDate() - 1);
-        lastMonday.setUTCHours(0, 0, 0, 0);
+        lastMonday.setHours(0, 0, 0, 0);
 
         const endWeek = new Date(lastMonday);
         endWeek.setUTCDate(lastMonday.getUTCDate() + 6);
-        endWeek.setUTCHours(23, 59, 59, 999);
+        endWeek.setHours(23, 59, 59, 999);
 
         if (today >= lastMonday && today <= endWeek) lastMonday = new Date(today);
 
@@ -85,8 +85,8 @@ router.get("/bookings", async (req, res) => {
 
 router.post("/booking", async (req, res) => {
     try {
-        const { courtId, userId, date, heureDebut } = req.body;
-        const userBooking = await prisma.booking.create({ data: { courtId, userId, date, heureDebut } });
+        const { courtId, userId, dateDebut } = req.body;
+        const userBooking = await prisma.booking.create({ data: { courtId, userId, dateDebut } });
         const user = await prisma.user.findUnique({
             select: { email: true, prenom: true },
             where: { id: userId }
@@ -96,8 +96,8 @@ router.post("/booking", async (req, res) => {
             where: { id: courtId }
         });
         const dateOptions = { weekday: "long", day: "numeric", month: "long" };
-        const dateStr = new Date(date).toLocaleDateString("fr-FR", dateOptions);
-        sendBookingConfirmationMail(user.email, user.prenom, court.nom, dateStr, heureDebut)
+        const dateStr = new Date(dateDebut).toLocaleDateString("fr-FR", dateOptions);
+        sendBookingConfirmationMail(user.email, user.prenom, court.nom, dateStr, new Date(dateDebut).getHours())
             .catch(err => console.error("Erreur lors de l'envoi du mail de réservation :", err));
         res.status(200).json({ message: `Booking successfully added for ID ${userId}`, userBooking });
     } catch (error) {
@@ -108,12 +108,11 @@ router.post("/booking", async (req, res) => {
 
 router.post("/cancel", async (req, res) => {
     try {
-        const { courtId, userId, date, heureDebut } = req.body;
+        const { courtId, userId, dateDebut } = req.body;
         const deleteElement = await prisma.booking.deleteMany({
             where: {
                 courtId: parseInt(courtId),
-                date: new Date(date),
-                heureDebut: parseInt(heureDebut)
+                dateDebut: new Date(dateDebut)
             }
         });
         const user = await prisma.user.findUnique({
@@ -125,8 +124,8 @@ router.post("/cancel", async (req, res) => {
             where: { id: courtId }
         });
         const dateOptions = { weekday: "long", day: "numeric", month: "long" };
-        const dateStr = new Date(date).toLocaleDateString("fr-FR", dateOptions);
-        sendCancelConfirmationMail(user.email, user.prenom, court.nom, dateStr, heureDebut)
+        const dateStr = new Date(dateDebut).toLocaleDateString("fr-FR", dateOptions);
+        sendCancelConfirmationMail(user.email, user.prenom, court.nom, dateStr, new Date(dateDebut).getHours())
             .catch(err => console.error("Erreur lors de l'envoi du mail d'annulation :", err));
         res.status(200).json({ message: `Booking successfully deleted`, deleteElement });
     } catch (error) {
@@ -150,14 +149,14 @@ router.post("/recuringBlock", async (req, res) => {
             endDate = new Date(currentDate);
             endDate.setDate(currentDate.getDate() + 7 * parseInt(dataForm.occurrences) - 1);
         }
-        endDate.setUTCHours(23, 59, 59, 999);
+        endDate.setHours(23, 59, 59, 999);
 
         const toPushToPrisma = [];
         while (currentDate <= endDate) {
             if (formattedDays.includes(currentDate.getDay())) {
-                const fixedDate = new Date(currentDate);
                 intervalles.forEach(async hour => {
-                    fixedDate.setUTCHours(hour, 0, 0, 0)
+                    const fixedDate = new Date(currentDate);
+                    fixedDate.setHours(hour, 0, 0, 0);
                     toPushToPrisma.push({
                         courtId: parseInt(dataForm.court),
                         dateDebut: fixedDate,
